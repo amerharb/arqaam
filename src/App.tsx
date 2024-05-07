@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import './App.css';
 import {useCallback} from 'react';
+import { Analytics } from '@vercel/analytics/react';
 
 function App() {
     type Lang = { code: string, display: string, flag?: string }
@@ -58,6 +59,7 @@ function App() {
             <button onClick={() => playSound(lang.code, 8)}>8</button>
             <button onClick={() => playSound(lang.code, 9)}>9</button>
             <button onClick={() => playSound(lang.code, 10)}>10</button>
+            <Analytics />
         </div>
     );
 }
