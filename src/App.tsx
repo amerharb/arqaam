@@ -5,10 +5,18 @@ import {useCallback} from 'react';
 function App() {
     type Lang = { code: string, display: string, flag?: string }
     const langList: Lang[] = [
+        // TODO: Add more languages later
+        // {code: 'ar', display: 'Arabic', flag: '🇵🇸'},
         {code: 'en', display: 'English', flag: '🇬🇧'},
+        // {code: 'de', display: 'German', flag: '🇩🇪'},
         {code: 'sv', display: 'Swedish', flag: '🇸🇪'},
-        {code: 'ar', display: 'Arabic', flag: '🇵🇸'},
-        {code: 'fa', display: 'Farsi', flag: '🇮🇷'},
+        // {code: 'fr', display: 'French', flag: '🇫🇷'},
+        // {code: 'tr', display: 'Turkish', flag: '🇹🇷'},
+        // {code: 'fa', display: 'Farsi', flag: '🇮🇷'},
+        // {code: 'fi', display: 'Finnish', flag: '🇫🇮'},
+        // {code: 'ru', display: 'Russian', flag: '🇷🇺'},
+        // {code: 'zh', display: 'Chinese', flag: '🇨🇳'},
+        // {code: 'es', display: 'Spanish', flag: '🇪🇸'},
     ];
     const [lang, setSelectedLanguage] = useState(langList[0]);
 
