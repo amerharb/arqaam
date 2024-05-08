@@ -27,7 +27,7 @@ function App() {
 
     const playSound = useCallback(async (langCode: string, n: number) => {
         try {
-            const audio = new Audio(`/sounds/${langCode}/${n}.ogg`);
+            const audio = new Audio(`/sounds/${langCode}/${n}.aac`);
             await audio.play();
         } catch (e) {
             console.error(e);
