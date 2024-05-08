@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import './App.css';
 import {useCallback} from 'react';
-import { Analytics } from '@vercel/analytics/react';
+import {Analytics} from '@vercel/analytics/react';
 
 function App() {
     type Lang = { code: string, display: string, flag?: string }
@@ -48,18 +48,18 @@ function App() {
                     </button>
                 ))}
             </hgroup>
-            <button onClick={() => playSound(lang.code, 0)}>0</button>
-            <button onClick={() => playSound(lang.code, 1)}>1</button>
-            <button onClick={() => playSound(lang.code, 2)}>2</button>
-            <button onClick={() => playSound(lang.code, 3)}>3</button>
-            <button onClick={() => playSound(lang.code, 4)}>4</button>
-            <button onClick={() => playSound(lang.code, 5)}>5</button>
-            <button onClick={() => playSound(lang.code, 6)}>6</button>
-            <button onClick={() => playSound(lang.code, 7)}>7</button>
-            <button onClick={() => playSound(lang.code, 8)}>8</button>
-            <button onClick={() => playSound(lang.code, 9)}>9</button>
-            <button onClick={() => playSound(lang.code, 10)}>10</button>
-            <Analytics />
+            <div>
+                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
+                    <button
+                        key={`number-${n}`}
+                        className='button-number'
+                        onClick={() => playSound(lang.code, n)}
+                    >
+                        {n}
+                    </button>
+                ))}
+            </div>
+            <Analytics/>
         </div>
     );
 }
