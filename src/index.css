@@ -29,31 +29,29 @@ button {
 	align-content: center;
 }
 
-/* App.css */
-
 .down {
-	background-color: #4CAF50; /* Green */
+	background-color: #4CAF50;
 	color: white;
 	border: none;
-	padding: 15px 32px;
+	padding: 15px 15px;
 	text-align: center;
 	text-decoration: none;
 	display: inline-block;
-	font-size: 16px;
+	font-size: 40px;
 	font-weight: bold;
 	cursor: pointer;
 	align-content: center;
 }
 
 .up {
-	background-color: gray; /* Red */
+	background-color: gray;
 	color: white;
 	border: none;
-	padding: 15px 32px;
+	padding: 15px 15px;
 	text-align: center;
 	text-decoration: none;
 	display: inline-block;
-	font-size: 16px;
+	font-size: 40px;
 	font-weight: normal;
 	cursor: pointer;
 	align-content: center;
