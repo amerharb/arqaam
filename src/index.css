@@ -21,42 +21,38 @@ h1 {
 button {
 	font-family: inherit;
 	font-size: 40px;
-	line-height: inherit;
-	color: #61dafb;
-	background-color: darkblue;
 	border-radius: 0.45rem;
 	border: 20px aliceblue;
 	cursor: pointer;
-	padding: 15px;
+	padding: 15px 15px;
+	text-align: center;
+	text-decoration: none;
 	margin: 10px;
 	width: 7%;
 	align-content: center;
+}
+
+button:active {
+	transform: scale(0.95);
+	transition: transform 0.1s;
+}
+
+.button-number {
+	line-height: inherit;
+	color: #61dafb;
+	background-color: darkblue;
 }
 
 .down {
 	background-color: #4CAF50;
 	color: white;
 	border: none;
-	padding: 15px 15px;
-	text-align: center;
-	text-decoration: none;
-	display: inline-block;
-	font-size: 40px;
-	font-weight: bold;
-	cursor: pointer;
-	align-content: center;
+	cursor: default;
 }
 
 .up {
 	background-color: gray;
 	color: white;
 	border: none;
-	padding: 15px 15px;
-	text-align: center;
-	text-decoration: none;
-	display: inline-block;
-	font-size: 40px;
-	font-weight: normal;
 	cursor: pointer;
-	align-content: center;
 }
