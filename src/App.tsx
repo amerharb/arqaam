@@ -44,7 +44,7 @@ function App() {
                         className={l.code === lang.code ? 'down' : 'up'}
                         onClick={() => handleLanguageChange(l)}
                     >
-                        {l.flag}{' '}{l.display}
+                        {l.flag}
                     </button>
                 ))}
             </hgroup>
