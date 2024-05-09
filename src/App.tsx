@@ -7,7 +7,7 @@ function App() {
     type Lang = { code: string, display: string, flag?: string }
     const langList: Lang[] = [
         // TODO: Add more languages later
-        // {code: 'ar', display: 'Arabic', flag: '🇵🇸'},
+        {code: 'ar', display: 'Arabic', flag: '🇵🇸'},
         {code: 'en', display: 'English', flag: '🇬🇧'},
         // {code: 'de', display: 'German', flag: '🇩🇪'},
         {code: 'sv', display: 'Swedish', flag: '🇸🇪'},
