@@ -9,7 +9,7 @@ function App() {
         // TODO: Add more languages later
         {code: 'ar', display: 'Arabic', flag: '🇵🇸'},
         {code: 'en', display: 'English', flag: '🇬🇧'},
-        // {code: 'de', display: 'German', flag: '🇩🇪'},
+        {code: 'de', display: 'German', flag: '🇩🇪'},
         {code: 'sv', display: 'Swedish', flag: '🇸🇪'},
         // {code: 'fr', display: 'French', flag: '🇫🇷'},
         // {code: 'tr', display: 'Turkish', flag: '🇹🇷'},
