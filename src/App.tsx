@@ -25,9 +25,30 @@ function App() {
 		setSelectedLanguage(lang)
 	}
 
+	async function getAudio(audioUrl: string) {
+		if ('caches' in window) {
+			const cache = await caches.open('audio-cache')
+			const cachedResponse = await cache.match(audioUrl)
+
+			if (cachedResponse) {
+				return cachedResponse
+			} else {
+				const response = await fetch(audioUrl)
+				await cache.put(audioUrl, response.clone())
+				return response
+			}
+		} else {
+			return await fetch(audioUrl)
+		}
+	}
+
 	const playSound = useCallback(async (langCode: string, n: number) => {
 		try {
-			const audio = new Audio(`/sounds/${langCode}/${n}.aac`)
+			const audioUrl = `/sounds/${langCode}/${n}.aac`
+			const response = await getAudio(audioUrl)
+			const blob = await response.blob()
+			const objectUrl = URL.createObjectURL(blob)
+			const audio = new Audio(objectUrl)
 			await audio.play()
 		} catch (e) {
 			console.error(e)
