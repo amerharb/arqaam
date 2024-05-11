@@ -26,17 +26,35 @@ function App() {
 	}
 
 	async function getAudio(audioUrl: string) {
+		const ttl = 1000 * 60 * 60 * 4 // 4 hour
 		if ('caches' in window) {
 			const cache = await caches.open('audio-cache')
+			const timestampCache = await caches.open('audio-cache-timestamps')
 			const cachedResponse = await cache.match(audioUrl)
 
 			if (cachedResponse) {
-				return cachedResponse
-			} else {
-				const response = await fetch(audioUrl)
-				await cache.put(audioUrl, response.clone())
-				return response
+				const timestampResponse = await timestampCache.match(audioUrl)
+				if (timestampResponse) {
+					const timestamp = await timestampResponse.text()
+					const cachedTime = Number(timestamp)
+					const currentTime = Date.now()
+
+					if (currentTime - cachedTime > ttl) {
+						await cache.delete(audioUrl)
+						await timestampCache.delete(audioUrl)
+					} else {
+						return cachedResponse
+					}
+				}
 			}
+
+			const response = await fetch(audioUrl)
+			await cache.put(audioUrl, response.clone())
+
+			const timestampResponse = new Response(Date.now().toString())
+			await timestampCache.put(audioUrl, timestampResponse)
+
+			return response
 		} else {
 			return await fetch(audioUrl)
 		}
