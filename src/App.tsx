@@ -63,9 +63,7 @@ function App() {
 
 	const playSound = useCallback(async (langCode: string, n?: number) => {
 		try {
-			const audioUrl = n
-				? `/sounds/${langCode}/${n}.aac`
-				: `/sounds/${langCode}/${langCode}.aac`
+			const audioUrl = `/sounds/${langCode}/${n ?? langCode}.aac`
 			const response = await getAudio(audioUrl)
 			const blob = await response.blob()
 			const objectUrl = URL.createObjectURL(blob)
