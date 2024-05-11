@@ -21,7 +21,8 @@ function App() {
 	]
 	const [lang, setSelectedLanguage] = useState(langList[0])
 
-	const handleLanguageChange = (lang: Lang) => {
+	const handleLanguageChange = async (lang: Lang) => {
+		await playSound(lang.code)
 		setSelectedLanguage(lang)
 	}
 
@@ -60,9 +61,11 @@ function App() {
 		}
 	}
 
-	const playSound = useCallback(async (langCode: string, n: number) => {
+	const playSound = useCallback(async (langCode: string, n?: number) => {
 		try {
-			const audioUrl = `/sounds/${langCode}/${n}.aac`
+			const audioUrl = n
+				? `/sounds/${langCode}/${n}.aac`
+				: `/sounds/${langCode}/${langCode}.aac`
 			const response = await getAudio(audioUrl)
 			const blob = await response.blob()
 			const objectUrl = URL.createObjectURL(blob)
