@@ -4,17 +4,87 @@ import {useCallback} from 'react'
 import {Analytics} from '@vercel/analytics/react'
 
 function App() {
-	type Lang = { code: string, display: string, flag?: string }
+	type Lang = { code: string, display: string, flag?: string, numbers?: string[] }
 	const langList: Lang[] = [
-		{code: 'ar', display: 'Arabic', flag: '🇵🇸'},
-		{code: 'en', display: 'English', flag: '🇬🇧'},
-		{code: 'de', display: 'German', flag: '🇩🇪'},
-		{code: 'sv', display: 'Swedish', flag: '🇸🇪'},
+		{
+			code: 'ar', display: 'Arabic', flag: '🇵🇸', numbers: [
+				'صفر',
+				'واحد',
+				'اثنان',
+				'ثلاثة',
+				'أربعة',
+				'خمسة',
+				'ستة',
+				'سبعة',
+				'ثمانية',
+				'تسعة',
+				'عشرة',
+			]
+		},
+		{
+			code: 'en', display: 'English', flag: '🇬🇧', numbers: [
+				'zero',
+				'one',
+				'two',
+				'three',
+				'four',
+				'five',
+				'six',
+				'seven',
+				'eight',
+				'nine',
+				'ten',
+			]
+		},
+		{
+			code: 'de', display: 'German', flag: '🇩🇪', numbers: [
+				'null',
+				'eins',
+				'zwei',
+				'drei',
+				'vier',
+				'fünf',
+				'sechs',
+				'sieben',
+				'acht',
+				'neun',
+				'zehn',
+			]
+		},
+		{
+			code: 'sv', display: 'Swedish', flag: '🇸🇪', numbers: [
+				'noll',
+				'ett',
+				'två',
+				'tre',
+				'fyra',
+				'fem',
+				'sex',
+				'sju',
+				'åtta',
+				'nio',
+				'tio',
+			]
+		},
 		// TODO: Add more languages later
 		// {code: 'fr', display: 'French', flag: '🇫🇷'},
 		// {code: 'tr', display: 'Turkish', flag: '🇹🇷'},
 		// {code: 'fa', display: 'Farsi', flag: '🇮🇷'},
-		// {code: 'fi', display: 'Finnish', flag: '🇫🇮'},
+		{
+			code: 'fi', display: 'Finnish', flag: '🇫🇮', numbers: [
+				'nolla',
+				'yksi',
+				'kaksi',
+				'kolme',
+				'neljä',
+				'viisi',
+				'kuusi',
+				'seitsemän',
+				'kahdeksan',
+				'yhdeksän',
+				'kymmenen',
+			]
+		},
 		// {code: 'ru', display: 'Russian', flag: '🇷🇺'},
 		// {code: 'zh', display: 'Chinese', flag: '🇨🇳'},
 		// {code: 'es', display: 'Spanish', flag: '🇪🇸'},
@@ -93,6 +163,7 @@ function App() {
 					<button
 						key={`number-${n}`}
 						className="button-number"
+						title={lang.numbers ? lang.numbers[n] : ''}
 						onClick={() => playSound(lang.code, n)}
 					>
 						{n}
