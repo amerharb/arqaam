@@ -1,24 +1,22 @@
-import React, {useState} from 'react'
 import './App.css'
-import {useCallback} from 'react'
-import {Analytics} from '@vercel/analytics/react'
+import React, { useCallback, useState } from 'react'
+import { Analytics } from '@vercel/analytics/react'
+import { Lang } from './lang/Lang'
+import { ar } from './lang/ar'
+import { de } from './lang/de'
+import { en } from './lang/en'
+import { fi } from './lang/fi'
+import { sv } from './lang/sv'
 
 function App() {
-	type Lang = { code: string, display: string, flag?: string }
-	const langList: Lang[] = [
-		{code: 'ar', display: 'Arabic', flag: '🇵🇸'},
-		{code: 'en', display: 'English', flag: '🇬🇧'},
-		{code: 'de', display: 'German', flag: '🇩🇪'},
-		{code: 'sv', display: 'Swedish', flag: '🇸🇪'},
-		// TODO: Add more languages later
-		// {code: 'fr', display: 'French', flag: '🇫🇷'},
-		// {code: 'tr', display: 'Turkish', flag: '🇹🇷'},
-		// {code: 'fa', display: 'Farsi', flag: '🇮🇷'},
-		// {code: 'fi', display: 'Finnish', flag: '🇫🇮'},
-		// {code: 'ru', display: 'Russian', flag: '🇷🇺'},
-		// {code: 'zh', display: 'Chinese', flag: '🇨🇳'},
-		// {code: 'es', display: 'Spanish', flag: '🇪🇸'},
-	]
+	const langList: Lang[] = [ar, en, de, sv, fi]
+	// TODO: Add more languages later
+	// {code: 'fr', display: 'French', flag: '🇫🇷'},
+	// {code: 'tr', display: 'Turkish', flag: '🇹🇷'},
+	// {code: 'fa', display: 'Farsi', flag: '🇮🇷'},
+	// {code: 'ru', display: 'Russian', flag: '🇷🇺'},
+	// {code: 'zh', display: 'Chinese', flag: '🇨🇳'},
+	// {code: 'es', display: 'Spanish', flag: '🇪🇸'},
 	const [lang, setSelectedLanguage] = useState(langList[0])
 
 	const handleLanguageChange = async (lang: Lang) => {
@@ -75,7 +73,7 @@ function App() {
 	}, [])
 
 	return (
-		<div className="Arqam">
+		<div className="Arqaam">
 			<h1>Arqaam Web</h1>
 			<hgroup>
 				{langList.map((l) => (
@@ -93,6 +91,7 @@ function App() {
 					<button
 						key={`number-${n}`}
 						className="button-number"
+						title={lang.numbers ? lang.numbers[n] : ''}
 						onClick={() => playSound(lang.code, n)}
 					>
 						{n}
