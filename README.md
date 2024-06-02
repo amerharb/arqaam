@@ -23,4 +23,7 @@ All what is needed is 12 sound files in ACC format, 1 for the name of the langua
 - English: [https://archive.org/details/numbers0-100englishpronouciation/]()
 - German: [Wikitionary DE](https://de.wiktionary.org/)
 - Swedish: [Wikimedia Commons](https://commons.wikimedia.org/)
+- Turkish: [www.ttsfree.com](https://ttsfree.com/text-to-speech/turkish-turkey)
 - Finnish: [www.ttsfree.com](https://ttsfree.com/text-to-speech/finnish-finland#google_vignette)
+- Russian: [Wikitionary RU](https://ru.wiktionary.org/)
+ 
