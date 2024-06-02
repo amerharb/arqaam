@@ -7,12 +7,12 @@ import { de } from './lang/de'
 import { en } from './lang/en'
 import { fi } from './lang/fi'
 import { sv } from './lang/sv'
+import { tr } from './lang/tr'
 
 function App() {
-	const langList: Lang[] = [ar, en, de, sv, fi]
+	const langList: Lang[] = [ar, en, de, sv, tr, fi]
 	// TODO: Add more languages later
 	// {code: 'fr', display: 'French', flag: '🇫🇷'},
-	// {code: 'tr', display: 'Turkish', flag: '🇹🇷'},
 	// {code: 'fa', display: 'Farsi', flag: '🇮🇷'},
 	// {code: 'ru', display: 'Russian', flag: '🇷🇺'},
 	// {code: 'zh', display: 'Chinese', flag: '🇨🇳'},
