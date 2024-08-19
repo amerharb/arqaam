@@ -2,7 +2,7 @@
 
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
-## [0.7.0] 2024-06-02
+## [0.7.0] 2024-08-02
 ### Added
 - Add Russian numbers
 
