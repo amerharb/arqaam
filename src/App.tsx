@@ -12,7 +12,7 @@ import { sv } from './lang/sv'
 import { tr } from './lang/tr'
 
 function App() {
-	const langList: Lang[] = [ar, en, de, fr, sv, tr, ru, fi]
+	const langList: Lang[] = [ar, en, de, sv, fr, tr, ru, fi]
 	// TODO: Add more languages later
 	// {code: 'fa', display: 'Farsi', flag: '🇮🇷'},
 	// {code: 'zh', display: 'Chinese', flag: '🇨🇳'},
@@ -25,7 +25,7 @@ function App() {
 	}
 
 	async function getAudio(audioUrl: string) {
-		const ttl = 1000 * 60 * 60 * 4 // 4 hour
+		const ttl = 1000 * 60 * 60 * 24 // 24 hour
 		if ('caches' in window) {
 			const cache = await caches.open('audio-cache')
 			const timestampCache = await caches.open('audio-cache-timestamps')
@@ -48,8 +48,12 @@ function App() {
 			}
 
 			const response = await fetch(audioUrl)
-			await cache.put(audioUrl, response.clone())
+			// skip caching if response empty
+			if (!response.headers.get('Content-Length')) {
+				return response
+			}
 
+			await cache.put(audioUrl, response.clone())
 			const timestampResponse = new Response(Date.now().toString())
 			await timestampCache.put(audioUrl, timestampResponse)
 

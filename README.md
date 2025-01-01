@@ -25,14 +25,14 @@ All the code is Frontend, no backend needed.
 #### Setup environment
 - Node 18.x or above
 - yarn classic 1.x `npm i -g yarn`
-- Install `yarn i`
+- Install `yarn install`
 - Build: `yarn build`
 - Start: `yarn start`
 ### What is needed
-- Support Farsi 🇮🇷, French 🇫🇷, Chinese 🇨🇳, Spanish 🇪🇸
+- Support Farsi 🇮🇷, Chinese 🇨🇳, Spanish 🇪🇸
 - CSS styling so website nicely aligned in all platform.
 - Better quality sound files.
-- Support offline mode.
+- Support offline mode, currently sound files cached for 24 hours.
 ### Deploying
 Once PR merged to main branch it automatically deployed using Vercel integration tool with GitHub
 
@@ -42,6 +42,7 @@ Once PR merged to main branch it automatically deployed using Vercel integration
 - English: [https://archive.org/details/numbers0-100englishpronouciation/]()
 - German: [Wiktionary DE](https://de.wiktionary.org/)
 - Swedish: [Wikimedia Commons](https://commons.wikimedia.org/)
+- French: [Wiktionary RU](https://fr.wiktionary.org/)
 - Turkish: [www.ttsfree.com](https://ttsfree.com/text-to-speech/turkish-turkey)
 - Finnish: [www.ttsfree.com](https://ttsfree.com/text-to-speech/finnish-finland#google_vignette)
 - Russian: [Wiktionary RU](https://ru.wiktionary.org/)
