@@ -49,7 +49,7 @@ function App() {
 
 			const response = await fetch(audioUrl)
 			// skip caching if response empty
-			if (!response.headers.get('Content-Length')) {
+			if (!response.headers.get('Content-Length') || response.headers.get('Content-Length') === '0') {
 				return response
 			}
 
