@@ -2,6 +2,10 @@
 
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## [0.8.0] 2024-01-01
+### Added
+- Add French numbers
+
 ## [0.7.0] 2024-08-02
 ### Added
 - Add Russian numbers
