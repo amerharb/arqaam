@@ -18,6 +18,7 @@ function App() {
 	// {code: 'zh', display: 'Chinese', flag: '🇨🇳'},
 	// {code: 'es', display: 'Spanish', flag: '🇪🇸'},
 	const [lang, setSelectedLanguage] = useState(langList[0])
+	const [spelledNumber, setSpelledNumber] = useState('')
 
 	const handleLanguageChange = async (lang: Lang) => {
 		await playSound(lang.code)
@@ -90,18 +91,26 @@ function App() {
 					</button>
 				))}
 			</hgroup>
-			<div>
+			<hgroup>
 				{[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
 					<button
 						key={`number-${n}`}
 						className="button-number"
 						title={lang.numbers ? lang.numbers[n] : ''}
-						onClick={() => playSound(lang.code, n)}
+						onClick={() => {
+							playSound(lang.code, n)
+							setSpelledNumber(lang.numbers ? lang.numbers[n] : '')
+						}}
 					>
 						{n}
 					</button>
 				))}
-			</div>
+			</hgroup>
+			<hgroup>
+				<h1>
+					{spelledNumber}
+				</h1>
+			</hgroup>
 			<Analytics/>
 		</div>
 	)
