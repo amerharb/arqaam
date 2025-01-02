@@ -6,26 +6,28 @@ import { ar } from './lang/ar'
 import { de } from './lang/de'
 import { en } from './lang/en'
 import { fi } from './lang/fi'
+import { fr } from './lang/fr'
 import { ru } from './lang/ru'
 import { sv } from './lang/sv'
 import { tr } from './lang/tr'
 
 function App() {
-	const langList: Lang[] = [ar, en, de, sv, tr, ru, fi]
+	const langList: Lang[] = [ar, en, de, sv, fr, tr, ru, fi]
 	// TODO: Add more languages later
-	// {code: 'fr', display: 'French', flag: '🇫🇷'},
 	// {code: 'fa', display: 'Farsi', flag: '🇮🇷'},
 	// {code: 'zh', display: 'Chinese', flag: '🇨🇳'},
 	// {code: 'es', display: 'Spanish', flag: '🇪🇸'},
 	const [lang, setSelectedLanguage] = useState(langList[0])
+	const [spelledNumber, setSpelledNumber] = useState('')
 
 	const handleLanguageChange = async (lang: Lang) => {
 		await playSound(lang.code)
 		setSelectedLanguage(lang)
+		setSpelledNumber('')
 	}
 
 	async function getAudio(audioUrl: string) {
-		const ttl = 1000 * 60 * 60 * 4 // 4 hour
+		const ttl = 1000 * 60 * 60 * 24 // 24 hour
 		if ('caches' in window) {
 			const cache = await caches.open('audio-cache')
 			const timestampCache = await caches.open('audio-cache-timestamps')
@@ -48,8 +50,12 @@ function App() {
 			}
 
 			const response = await fetch(audioUrl)
-			await cache.put(audioUrl, response.clone())
+			// skip caching if response empty
+			if (!response.headers.get('Content-Length') || response.headers.get('Content-Length') === '0') {
+				return response
+			}
 
+			await cache.put(audioUrl, response.clone())
 			const timestampResponse = new Response(Date.now().toString())
 			await timestampCache.put(audioUrl, timestampResponse)
 
@@ -86,18 +92,26 @@ function App() {
 					</button>
 				))}
 			</hgroup>
-			<div>
+			<hgroup>
 				{[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
 					<button
 						key={`number-${n}`}
 						className="button-number"
 						title={lang.numbers ? lang.numbers[n] : ''}
-						onClick={() => playSound(lang.code, n)}
+						onClick={() => {
+							playSound(lang.code, n)
+							setSpelledNumber(lang.numbers ? lang.numbers[n] : '')
+						}}
 					>
 						{n}
 					</button>
 				))}
-			</div>
+			</hgroup>
+			<hgroup>
+				<h1>
+					{spelledNumber}
+				</h1>
+			</hgroup>
 			<Analytics/>
 		</div>
 	)

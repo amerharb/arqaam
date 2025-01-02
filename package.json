@@ -1,6 +1,6 @@
 {
   "name": "arqam",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "private": true,
   "dependencies": {
     "@vercel/analytics": "^1.2.2",
