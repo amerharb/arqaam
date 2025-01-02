@@ -23,6 +23,7 @@ function App() {
 	const handleLanguageChange = async (lang: Lang) => {
 		await playSound(lang.code)
 		setSelectedLanguage(lang)
+		setSpelledNumber('')
 	}
 
 	async function getAudio(audioUrl: string) {
