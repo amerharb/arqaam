@@ -5,6 +5,7 @@ import { Lang } from './lang/Lang'
 import { ar } from './lang/ar'
 import { de } from './lang/de'
 import { en } from './lang/en'
+import { fa } from './lang/fa'
 import { fi } from './lang/fi'
 import { fr } from './lang/fr'
 import { ru } from './lang/ru'
@@ -12,9 +13,8 @@ import { sv } from './lang/sv'
 import { tr } from './lang/tr'
 
 function App() {
-	const langList: Lang[] = [ar, en, de, sv, fr, tr, ru, fi]
+	const langList: Lang[] = [ar, en, de, sv, fr, tr, fa, ru, fi]
 	// TODO: Add more languages later
-	// {code: 'fa', display: 'Farsi', flag: '🇮🇷'},
 	// {code: 'zh', display: 'Chinese', flag: '🇨🇳'},
 	// {code: 'es', display: 'Spanish', flag: '🇪🇸'},
 	const [lang, setSelectedLanguage] = useState(langList[0])

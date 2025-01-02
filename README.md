@@ -1,4 +1,4 @@
-[![Version](https://img.shields.io/badge/version-0.7.0-blue.svg)](https://github.com/amerharb/arqaam/tree/version/0.7.0)
+[![Version](https://img.shields.io/badge/version-0.9.0-blue.svg)](https://github.com/amerharb/arqaam/tree/version/0.9.0)
 # Arqaam
 
 Small react project to pronounce number from zero to ten in several languages.
@@ -9,6 +9,9 @@ Small react project to pronounce number from zero to ten in several languages.
 - English
 - German
 - Swedish
+- French
+- Turkish
+- Persian
 - Russian
 - Finnish
 - We are looking for more languages see How to contribute
@@ -29,7 +32,7 @@ All the code is Frontend, no backend needed.
 - Build: `yarn build`
 - Start: `yarn start`
 ### What is needed
-- Support Farsi 🇮🇷, Chinese 🇨🇳, Spanish 🇪🇸
+- Add Chinese 🇨🇳, Spanish 🇪🇸
 - CSS styling so website nicely aligned in all platform.
 - Better quality sound files.
 - Support offline mode, currently sound files cached for 24 hours.
