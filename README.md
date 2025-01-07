@@ -47,5 +47,6 @@ Once PR merged to main branch it automatically deployed using Vercel integration
 - Swedish: [Wikimedia Commons](https://commons.wikimedia.org/)
 - French: [Wiktionary RU](https://fr.wiktionary.org/)
 - Turkish: [www.ttsfree.com](https://ttsfree.com/text-to-speech/turkish-turkey)
+- Persian: [www.narakeet.com](https://www.narakeet.com/app/text-to-audio)
 - Finnish: [www.ttsfree.com](https://ttsfree.com/text-to-speech/finnish-finland#google_vignette)
 - Russian: [Wiktionary RU](https://ru.wiktionary.org/)
