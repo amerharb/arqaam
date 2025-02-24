@@ -13,11 +13,12 @@ import { sv } from './lang/sv'
 import { tr } from './lang/tr'
 
 function App() {
-	const langList: Lang[] = [ar, en, de, sv, fr, tr, fa, ru, fi]
+	const LANGUAGES: Lang[] = [ar, en, de, sv, fr, tr, fa, ru, fi]
+	const DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 	// TODO: Add more languages later
 	// {code: 'zh', display: 'Chinese', flag: '🇨🇳'},
 	// {code: 'es', display: 'Spanish', flag: '🇪🇸'},
-	const [lang, setSelectedLanguage] = useState(langList[0])
+	const [lang, setSelectedLanguage] = useState(LANGUAGES[0])
 	const [spelledNumber, setSpelledNumber] = useState('')
 
 	const handleLanguageChange = async (lang: Lang) => {
@@ -65,6 +66,41 @@ function App() {
 		}
 	}
 
+	async function cacheAllAudioFiles() {
+		console.time('cacheAllAudioFiles')
+		try {
+			const audioUrls = LANGUAGES.flatMap(lang => DIGITS.map(n => `/sounds/${lang.code}/${n}.aac`))
+
+			await caches.delete('audio-cache')
+			await caches.delete('audio-cache-timestamps')
+			const cache = await caches.open('audio-cache')
+			const timestampCache = await caches.open('audio-cache-timestamps')
+
+			await Promise.all(
+				audioUrls.map(async url => {
+					try {
+						const res = await fetch(url)
+						if (res.ok && res.body) {
+							await cache.put(url, res.clone())
+							const timestampResponse = new Response(Date.now().toString())
+							await timestampCache.put(url, timestampResponse)
+						} else {
+							console.warn(`Failed to cache: ${url} (status: ${res.status})`)
+						}
+					} catch (err) {
+						console.error(`Error fetching ${url}:`, err)
+					}
+				}),
+			)
+
+			console.log('Audio files cached successfully')
+		} catch (error) {
+			console.error('Failed to cache audio files:', error)
+		} finally {
+			console.timeEnd('cacheAllAudioFiles')
+		}
+	}
+
 	const playSound = useCallback(async (langCode: string, n?: number) => {
 		try {
 			const audioUrl = `/sounds/${langCode}/${n ?? langCode}.aac`
@@ -82,7 +118,7 @@ function App() {
 		<div className="Arqaam">
 			<h1>Arqaam Web</h1>
 			<hgroup>
-				{langList.map((l) => (
+				{LANGUAGES.map((l) => (
 					<button
 						key={`lang-${l.code}`}
 						className={l.code === lang.code ? 'down' : 'up'}
@@ -93,7 +129,7 @@ function App() {
 				))}
 			</hgroup>
 			<hgroup>
-				{[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
+				{DIGITS.map(n => (
 					<button
 						key={`number-${n}`}
 						className="button-number"
