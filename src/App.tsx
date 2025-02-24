@@ -30,20 +30,20 @@ function App() {
 	async function getAudio(audioUrl: string) {
 		const ttl = 1000 * 60 * 60 * 24 // 24 hour
 		if ('caches' in window) {
-			const cache = await caches.open('audio-cache')
-			const timestampCache = await caches.open('audio-cache-timestamps')
-			const cachedResponse = await cache.match(audioUrl)
+			const audioCache = await caches.open('audio-cache')
+			const audioCacheTimestamps = await caches.open('audio-cache-timestamps')
+			const cachedResponse = await audioCache.match(audioUrl)
 
 			if (cachedResponse) {
-				const timestampResponse = await timestampCache.match(audioUrl)
+				const timestampResponse = await audioCacheTimestamps.match(audioUrl)
 				if (timestampResponse) {
 					const timestamp = await timestampResponse.text()
 					const cachedTime = Number(timestamp)
 					const currentTime = Date.now()
 
 					if (currentTime - cachedTime > ttl) {
-						await cache.delete(audioUrl)
-						await timestampCache.delete(audioUrl)
+						await audioCache.delete(audioUrl)
+						await audioCacheTimestamps.delete(audioUrl)
 					} else {
 						return cachedResponse
 					}
@@ -56,9 +56,9 @@ function App() {
 				return response
 			}
 
-			await cache.put(audioUrl, response.clone())
+			await audioCache.put(audioUrl, response.clone())
 			const timestampResponse = new Response(Date.now().toString())
-			await timestampCache.put(audioUrl, timestampResponse)
+			await audioCacheTimestamps.put(audioUrl, timestampResponse)
 
 			return response
 		} else {
@@ -73,17 +73,17 @@ function App() {
 
 			await caches.delete('audio-cache')
 			await caches.delete('audio-cache-timestamps')
-			const cache = await caches.open('audio-cache')
-			const timestampCache = await caches.open('audio-cache-timestamps')
+			const audioCache = await caches.open('audio-cache')
+			const audioCacheTimestamps = await caches.open('audio-cache-timestamps')
 
 			await Promise.all(
 				audioUrls.map(async url => {
 					try {
 						const res = await fetch(url)
 						if (res.ok && res.body) {
-							await cache.put(url, res.clone())
+							await audioCache.put(url, res.clone())
 							const timestampResponse = new Response(Date.now().toString())
-							await timestampCache.put(url, timestampResponse)
+							await audioCacheTimestamps.put(url, timestampResponse)
 						} else {
 							console.warn(`Failed to cache: ${url} (status: ${res.status})`)
 						}
