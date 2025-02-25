@@ -28,7 +28,7 @@ function App() {
 	}
 
 	async function getAudio(audioUrl: string) {
-		const ttl = 1000 * 60 * 60 * 24 // 24 hour
+		const TTL = 1000 * 60 * 60 * 24 * 7 // 7 days
 		if ('caches' in window) {
 			const audioCache = await caches.open('audio-cache')
 			const audioCacheTimestamps = await caches.open('audio-cache-timestamps')
@@ -41,7 +41,7 @@ function App() {
 					const cachedTime = Number(timestamp)
 					const currentTime = Date.now()
 
-					if (currentTime - cachedTime > ttl) {
+					if (currentTime - cachedTime > TTL) {
 						await audioCache.delete(audioUrl)
 						await audioCacheTimestamps.delete(audioUrl)
 					} else {
