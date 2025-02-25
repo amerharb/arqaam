@@ -69,7 +69,9 @@ function App() {
 	async function cacheAllAudioFiles() {
 		console.time('cacheAllAudioFiles')
 		try {
-			const audioUrls = LANGUAGES.flatMap(lang => DIGITS.map(n => `/sounds/${lang.code}/${n}.aac`))
+			const digitUrls = LANGUAGES.flatMap(lang => DIGITS.map(n => `/sounds/${lang.code}/${n}.aac`))
+			const langUrls = LANGUAGES.map(lang => `/sounds/${lang.code}/${lang.code}.aac`)
+			const audioUrls = [...digitUrls, ...langUrls]
 
 			await caches.delete('audio-cache')
 			await caches.delete('audio-cache-timestamps')
@@ -80,7 +82,7 @@ function App() {
 				audioUrls.map(async url => {
 					try {
 						const res = await fetch(url)
-						if (res.ok && res.body) {
+						if (res.ok && res.body && res.headers.get('Content-Length') && res.headers.get('Content-Length') !== '0') {
 							await audioCache.put(url, res.clone())
 							const timestampResponse = new Response(Date.now().toString())
 							await audioCacheTimestamps.put(url, timestampResponse)
@@ -114,9 +116,21 @@ function App() {
 		}
 	}, [])
 
+	const pageTitle = 'Arqaam Web'
 	return (
 		<div className="Arqaam">
-			<h1>Arqaam Web</h1>
+			<h1
+				onDoubleClick={() => {
+					const h1 = document.querySelector('h1')
+					if (!h1) return
+					h1.style.backgroundColor = 'darkgreen'
+					h1.textContent = 'Downloading...'
+					cacheAllAudioFiles().then(() => {
+						h1.style.backgroundColor = ''
+						h1.textContent = pageTitle
+					})
+				}}
+			>{pageTitle}</h1>
 			<hgroup>
 				{LANGUAGES.map((l) => (
 					<button
