@@ -35,7 +35,6 @@ All the code is Frontend, no backend needed.
 - Add Chinese 🇨🇳, Spanish 🇪🇸
 - CSS styling so website nicely aligned in all platform.
 - Better quality sound files.
-- Support offline mode, currently sound files cached for 24 hours.
 ### Deploying
 Once PR merged to main branch it automatically deployed using Vercel integration tool with GitHub
 

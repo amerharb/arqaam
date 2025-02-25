@@ -2,11 +2,13 @@
 
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
-## [0.9.0] 2024-01-02
+## [0.9.0] 2024-02-25
 ### Added
 - Add Persian numbers
+- Cache sound files for 1 week instead of 1 day
+- Cache sound files when double click page title
 
-## [0.8.0] 2024-01-01
+## [0.8.0] 2025-01-01
 ### Added
 - Add French numbers
 - Show number spelling
