@@ -5,6 +5,7 @@ import { Lang } from './lang/Lang'
 import { ar } from './lang/ar'
 import { de } from './lang/de'
 import { en } from './lang/en'
+import { fa } from './lang/fa'
 import { fi } from './lang/fi'
 import { fr } from './lang/fr'
 import { ru } from './lang/ru'
@@ -12,12 +13,12 @@ import { sv } from './lang/sv'
 import { tr } from './lang/tr'
 
 function App() {
-	const langList: Lang[] = [ar, en, de, sv, fr, tr, ru, fi]
+	const LANGUAGES: Lang[] = [ar, en, de, sv, fr, tr, fa, ru, fi]
+	const DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 	// TODO: Add more languages later
-	// {code: 'fa', display: 'Farsi', flag: '🇮🇷'},
 	// {code: 'zh', display: 'Chinese', flag: '🇨🇳'},
 	// {code: 'es', display: 'Spanish', flag: '🇪🇸'},
-	const [lang, setSelectedLanguage] = useState(langList[0])
+	const [lang, setSelectedLanguage] = useState(LANGUAGES[0])
 	const [spelledNumber, setSpelledNumber] = useState('')
 
 	const handleLanguageChange = async (lang: Lang) => {
@@ -27,22 +28,22 @@ function App() {
 	}
 
 	async function getAudio(audioUrl: string) {
-		const ttl = 1000 * 60 * 60 * 24 // 24 hour
+		const TTL = 1000 * 60 * 60 * 24 * 7 // 7 days
 		if ('caches' in window) {
-			const cache = await caches.open('audio-cache')
-			const timestampCache = await caches.open('audio-cache-timestamps')
-			const cachedResponse = await cache.match(audioUrl)
+			const audioCache = await caches.open('audio-cache')
+			const audioCacheTimestamps = await caches.open('audio-cache-timestamps')
+			const cachedResponse = await audioCache.match(audioUrl)
 
 			if (cachedResponse) {
-				const timestampResponse = await timestampCache.match(audioUrl)
+				const timestampResponse = await audioCacheTimestamps.match(audioUrl)
 				if (timestampResponse) {
 					const timestamp = await timestampResponse.text()
 					const cachedTime = Number(timestamp)
 					const currentTime = Date.now()
 
-					if (currentTime - cachedTime > ttl) {
-						await cache.delete(audioUrl)
-						await timestampCache.delete(audioUrl)
+					if (currentTime - cachedTime > TTL) {
+						await audioCache.delete(audioUrl)
+						await audioCacheTimestamps.delete(audioUrl)
 					} else {
 						return cachedResponse
 					}
@@ -55,13 +56,50 @@ function App() {
 				return response
 			}
 
-			await cache.put(audioUrl, response.clone())
+			await audioCache.put(audioUrl, response.clone())
 			const timestampResponse = new Response(Date.now().toString())
-			await timestampCache.put(audioUrl, timestampResponse)
+			await audioCacheTimestamps.put(audioUrl, timestampResponse)
 
 			return response
 		} else {
 			return await fetch(audioUrl)
+		}
+	}
+
+	async function cacheAllAudioFiles() {
+		console.time('cacheAllAudioFiles')
+		try {
+			const digitUrls = LANGUAGES.flatMap(lang => DIGITS.map(n => `/sounds/${lang.code}/${n}.aac`))
+			const langUrls = LANGUAGES.map(lang => `/sounds/${lang.code}/${lang.code}.aac`)
+			const audioUrls = [...digitUrls, ...langUrls]
+
+			await caches.delete('audio-cache')
+			await caches.delete('audio-cache-timestamps')
+			const audioCache = await caches.open('audio-cache')
+			const audioCacheTimestamps = await caches.open('audio-cache-timestamps')
+
+			await Promise.all(
+				audioUrls.map(async url => {
+					try {
+						const res = await fetch(url)
+						if (res.ok && res.body && res.headers.get('Content-Length') && res.headers.get('Content-Length') !== '0') {
+							await audioCache.put(url, res.clone())
+							const timestampResponse = new Response(Date.now().toString())
+							await audioCacheTimestamps.put(url, timestampResponse)
+						} else {
+							console.warn(`Failed to cache: ${url} (status: ${res.status})`)
+						}
+					} catch (err) {
+						console.error(`Error fetching ${url}:`, err)
+					}
+				}),
+			)
+
+			console.log('Audio files cached successfully')
+		} catch (error) {
+			console.error('Failed to cache audio files:', error)
+		} finally {
+			console.timeEnd('cacheAllAudioFiles')
 		}
 	}
 
@@ -78,11 +116,23 @@ function App() {
 		}
 	}, [])
 
+	const pageTitle = 'Arqaam Web'
 	return (
 		<div className="Arqaam">
-			<h1>Arqaam Web</h1>
+			<h1
+				onDoubleClick={() => {
+					const h1 = document.querySelector('h1')
+					if (!h1) return
+					h1.style.backgroundColor = 'darkgreen'
+					h1.textContent = 'Downloading...'
+					cacheAllAudioFiles().then(() => {
+						h1.style.backgroundColor = ''
+						h1.textContent = pageTitle
+					})
+				}}
+			>{pageTitle}</h1>
 			<hgroup>
-				{langList.map((l) => (
+				{LANGUAGES.map((l) => (
 					<button
 						key={`lang-${l.code}`}
 						className={l.code === lang.code ? 'down' : 'up'}
@@ -93,7 +143,7 @@ function App() {
 				))}
 			</hgroup>
 			<hgroup>
-				{[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
+				{DIGITS.map(n => (
 					<button
 						key={`number-${n}`}
 						className="button-number"
