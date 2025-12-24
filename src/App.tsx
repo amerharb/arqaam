@@ -11,13 +11,11 @@ import { fr } from './lang/fr'
 import { ru } from './lang/ru'
 import { sv } from './lang/sv'
 import { tr } from './lang/tr'
+import { es } from './lang/es'
 
 function App() {
-	const LANGUAGES: Lang[] = [ar, en, de, sv, fr, tr, fa, ru, fi]
+	const LANGUAGES: Lang[] = [ar, en, de, sv, fr, tr, fa, ru, fi, es]
 	const DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-	// TODO: Add more languages later
-	// {code: 'zh', display: 'Chinese', flag: '🇨🇳'},
-	// {code: 'es', display: 'Spanish', flag: '🇪🇸'},
 	const [lang, setSelectedLanguage] = useState(LANGUAGES[0])
 	const [spelledNumber, setSpelledNumber] = useState('')
 

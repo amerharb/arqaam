@@ -3,6 +3,8 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
 ## [0.10.0] 2024-02-25
+### Added
+- Add Spanish numbers
 ### Changed
 - Enhance async call by using promise.all 
 
