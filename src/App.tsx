@@ -11,13 +11,11 @@ import { fr } from './lang/fr'
 import { ru } from './lang/ru'
 import { sv } from './lang/sv'
 import { tr } from './lang/tr'
+import { es } from './lang/es'
 
 function App() {
-	const LANGUAGES: Lang[] = [ar, en, de, sv, fr, tr, fa, ru, fi]
+	const LANGUAGES: Lang[] = [ar, en, de, sv, fr, tr, fa, ru, fi, es]
 	const DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-	// TODO: Add more languages later
-	// {code: 'zh', display: 'Chinese', flag: '🇨🇳'},
-	// {code: 'es', display: 'Spanish', flag: '🇪🇸'},
 	const [lang, setSelectedLanguage] = useState(LANGUAGES[0])
 	const [spelledNumber, setSpelledNumber] = useState('')
 
@@ -42,8 +40,10 @@ function App() {
 					const currentTime = Date.now()
 
 					if (currentTime - cachedTime > TTL) {
-						await audioCache.delete(audioUrl)
-						await audioCacheTimestamps.delete(audioUrl)
+						await Promise.all([
+							await audioCache.delete(audioUrl),
+							await audioCacheTimestamps.delete(audioUrl),
+						])
 					} else {
 						return cachedResponse
 					}
@@ -73,19 +73,24 @@ function App() {
 			const langUrls = LANGUAGES.map(lang => `/sounds/${lang.code}/${lang.code}.aac`)
 			const audioUrls = [...digitUrls, ...langUrls]
 
-			await caches.delete('audio-cache')
-			await caches.delete('audio-cache-timestamps')
-			const audioCache = await caches.open('audio-cache')
-			const audioCacheTimestamps = await caches.open('audio-cache-timestamps')
+			await Promise.all([
+				caches.delete('audio-cache'),
+				caches.delete('audio-cache-timestamps'),
+			])
+			const [audioCache, audioCacheTimestamps] = await Promise.all([
+				caches.open('audio-cache'),
+				caches.open('audio-cache-timestamps'),
+			])
 
 			await Promise.all(
 				audioUrls.map(async url => {
 					try {
 						const res = await fetch(url)
 						if (res.ok && res.body && res.headers.get('Content-Length') && res.headers.get('Content-Length') !== '0') {
-							await audioCache.put(url, res.clone())
-							const timestampResponse = new Response(Date.now().toString())
-							await audioCacheTimestamps.put(url, timestampResponse)
+							await Promise.all([
+								audioCache.put(url, res.clone()),
+								audioCacheTimestamps.put(url, new Response(Date.now().toString())),
+							])
 						} else {
 							console.warn(`Failed to cache: ${url} (status: ${res.status})`)
 						}
