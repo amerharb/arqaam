@@ -16,14 +16,18 @@
   builds while keeping them visible in development, like the sister projects
 ### Changed
 - Change the game toggle emoji from 🎮 to 🕹️ (the classic joystick)
-- Unify the display line into one fixed-height segment (the spelled name, the
-  live game stats and the final result all share it), so entering or leaving
-  game mode never shifts the board; on narrow screens the stats row scales
-  down to stay on one line
-- Move the name/score display line above the board (it was below), show the
-  game stats (🏁 played 👎 mistakes 🤷‍♂️ give-ups ⏱️ time) live during the
-  game — the time ticks every second — instead of only as an end-of-game
-  result, and move the give-up button (🤷‍♂️) into that live stats row
+- Restructure the top of the app into one sticky app bar with four segments,
+  right-to-left: toolbar (🕹️ game, language, ⚙️ settings), display (the spoken
+  name, fixed width — names wider than it auto-scroll back and forth), live
+  game score (🏁 played 👎 mistakes 🤷‍♂️ give-ups ⏱️ time, ticking every
+  second) and game actions. The last two only appear in game mode, unfolding
+  with a smooth transition; on narrow screens the bar stacks the segments
+  top-to-bottom in the same order
+- The game no longer ends by itself: when every number has been played the
+  round is over — the clock freezes and the score stays — but game mode
+  stays on. New round actions sit next to the give-up button (🤷‍♂️): stop
+  (✋) ends the current round early and restart (🔄) starts a fresh one;
+  clicking 🕹️ again leaves game mode and hides the game score and actions
 - In the game result, show the mistakes count with 👎 instead of ❌, matching
   the marker shown on a wrong guess
 - Replace the generated favicon set (ico + five pngs) with a single hand-drawn

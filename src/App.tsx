@@ -217,19 +217,21 @@ function App() {
 	const [mistakes, setMistakes] = useState(0)      // wrong taps this game
 	const [giveUps, setGiveUps] = useState(0)        // numbers given up on this game
 	const [gaveUpNumbers, setGaveUpNumbers] = useState<number[]>([]) // numbers given up on, to mark them 🤷‍♂️
-	const gameStart = useRef(0)                       // Date.now() when the game began
-	const [result, setResult] = useState<{ played: number, total: number, mistakes: number, giveUps: number, ms: number } | null>(null)
+	const gameStart = useRef(0)                       // Date.now() when the round began
+	// when the round ended (all played, or ✋): freezes the clock and stats until
+	// 🔄 starts a new round or 🕹️ leaves game mode; null while a round is running
+	const [endedAt, setEndedAt] = useState<number | null>(null)
 	const [feedback, setFeedback] = useState<{ emoji: string, id: number } | null>(null)
 	const feedbackId = useRef(0)
 	const [preparing, setPreparing] = useState(false) // downloading game sounds before start
 
-	// tick every second while the game runs, so the live ⏱️ time updates
+	// tick every second while a round runs, so the live ⏱️ time updates
 	const [, setClockTick] = useState(0)
 	useEffect(() => {
-		if (!gameOn) return
+		if (!gameOn || endedAt !== null) return
 		const id = setInterval(() => setClockTick(t => t + 1), 1000)
 		return () => clearInterval(id)
-	}, [gameOn])
+	}, [gameOn, endedAt])
 
 	const canPlayGame = LANGUAGES.length > 0
 
@@ -247,12 +249,13 @@ function App() {
 		setTimeout(() => setFeedback(f => (f && f.id === id ? null : f)), 700)
 	}
 
-	const startGame = async () => {
+	// start a round (also used by 🔄 to restart): preload the prompt sounds, reset
+	// the counters, pick the first target and turn game mode on
+	const startRound = async () => {
 		if (!canPlayGame || !lang || preparing) return
 		stopSound()
-		setResult(null) // clear a previous game's result so ⏳ shows while preparing
 		// the board keeps the numbers in order (no shuffle) — only the prompts are random
-		// pre-load every prompt sound before the game begins, so gameplay never waits
+		// pre-load every prompt sound before the round begins, so gameplay never waits
 		// on the network (cached in IndexedDB, which also works in Safari Lockdown)
 		setPreparing(true)
 		await ensureCached(DIGITS.map(n => `/sound/lang/${lang.code}/${n}.aac`))
@@ -264,6 +267,7 @@ function App() {
 		setMistakes(0)
 		setGiveUps(0)
 		setGaveUpNumbers([])
+		setEndedAt(null)
 		setSpelledNumber('')
 		gameStart.current = Date.now()
 		setTarget(first)
@@ -271,25 +275,27 @@ function App() {
 		playFile(lang.code, first)
 	}
 
-	const endGame = () => {
+	// 🕹️ off: leave game mode entirely (hides the game score and actions)
+	const exitGame = () => {
 		stopSound()
 		setGameOn(false)
 		setTarget(null)
 		setWrongGuesses([])
 		setFeedback(null)
-		// show the result for the numbers played so far
-		setResult({
-			played: solved.length,
-			total: DIGITS.length,
-			mistakes,
-			giveUps,
-			ms: Date.now() - gameStart.current,
-		})
+		setEndedAt(null)
 	}
 
-	// mark the target number played and move on (or finish). mistakesTotal and
-	// giveUpsTotal are the running counts to record if this was the last number.
-	const advance = (n: number, mistakesTotal: number, giveUpsTotal: number) => {
+	// ✋: stop the current round early — freeze the clock and stats, stay in game mode
+	const stopRound = () => {
+		if (target === null) return
+		stopSound()
+		setTarget(null)
+		setWrongGuesses([])
+		setEndedAt(Date.now())
+	}
+
+	// mark the target number played and move on (or finish the round)
+	const advance = (n: number) => {
 		// cancel any not-yet-fired next-prompt timer (e.g. the player answered the
 		// last number before the previous prompt was scheduled to play)
 		if (promptTimer.current) {
@@ -302,17 +308,11 @@ function App() {
 		setSolved(nextSolved)
 		const remaining = DIGITS.filter(d => !nextSolved.includes(d))
 		if (remaining.length === 0) {
-			// all numbers played — game over.
+			// all numbers played — the round is over, but game mode stays on until
+			// 🕹️ is clicked again (or 🔄 starts a new round)
 			stopSound()
-			setGameOn(false)
 			setTarget(null)
-			setResult({
-				played: nextSolved.length,
-				total: DIGITS.length,
-				mistakes: mistakesTotal,
-				giveUps: giveUpsTotal,
-				ms: Date.now() - gameStart.current,
-			})
+			setEndedAt(Date.now())
 		} else {
 			const next = randomOf(remaining)
 			setTarget(next)
@@ -328,7 +328,7 @@ function App() {
 		if (n === target) {
 			playFx('correct')
 			flashFeedback('👍')
-			advance(n, mistakes, giveUps)
+			advance(n)
 		} else {
 			// temporarily disable this wrong number (with a 👎 marker) until the round is won
 			setWrongGuesses(w => (w.includes(n) ? w : [...w, n]))
@@ -341,81 +341,96 @@ function App() {
 	// give up on the current number: counts as played and as a give-up (not a mistake)
 	const giveUp = () => {
 		if (target === null) return
-		const nextGiveUps = giveUps + 1
-		setGiveUps(nextGiveUps)
+		setGiveUps(g => g + 1)
 		setGaveUpNumbers(g => (g.includes(target) ? g : [...g, target]))
 		playFx('giveup')
 		flashFeedback('🤷‍♂️')
-		advance(target, mistakes, nextGiveUps)
+		advance(target)
 	}
 
 	return (
 		<div className="Arqaam">
-			<div className="top-controls">
-				<button
-					className={(gameOn ? 'game-toggle on' : 'game-toggle') + (preparing ? ' busy' : '')}
-					aria-label={gameOn ? 'End game' : 'Start game'}
-					aria-pressed={gameOn}
-					title={
-						gameOn
-							? 'End game'
-							: (canPlayGame ? 'Start game' : 'Select at least one language to play')
-					}
-					disabled={(!gameOn && !canPlayGame) || preparing}
-					onClick={() => (gameOn ? endGame() : startGame())}
-				>
-					🕹️
-				</button>
-				<select
-					className="language-select"
-					title="Language of the numbers"
-					value={lang ? lang.code : ''}
-					disabled={gameOn}
-					onChange={(e) => handleLanguageChange(e.target.value)}
-				>
-					{LANGUAGES.map(l => (
-						<option key={`lang-${l.code}`} value={l.code}>{l.display}</option>
-					))}
-				</select>
-				<SettingsPanel
-					settings={settings}
-					languages={ALL_LANGUAGES}
-					caching={caching}
-					cachedCount={cachedCount}
-					locked={gameOn}
-					onChange={updateSettings}
-					onClearCache={clearSoundCache}
-				/>
-			</div>
-			<hgroup className="display-area">
-				{gameOn ? (
-					<div className="game-result">
+			{/* the app bar's four segments sit right-to-left: toolbar, display,
+			    game score, game actions (the last two only in game mode) */}
+			<header className="app-bar">
+				<div className="toolbar">
+					<button
+						className={(gameOn ? 'game-toggle on' : 'game-toggle') + (preparing ? ' busy' : '')}
+						aria-label={gameOn ? 'End game mode' : 'Start game'}
+						aria-pressed={gameOn}
+						title={
+							gameOn
+								? 'End game mode'
+								: (canPlayGame ? 'Start game' : 'Select at least one language to play')
+						}
+						disabled={(!gameOn && !canPlayGame) || preparing}
+						onClick={() => (gameOn ? exitGame() : startRound())}
+					>
+						🕹️
+					</button>
+					<select
+						className="language-select"
+						title="Language of the numbers"
+						value={lang ? lang.code : ''}
+						disabled={gameOn}
+						onChange={(e) => handleLanguageChange(e.target.value)}
+					>
+						{LANGUAGES.map(l => (
+							<option key={`lang-${l.code}`} value={l.code}>{l.display}</option>
+						))}
+					</select>
+					<SettingsPanel
+						settings={settings}
+						languages={ALL_LANGUAGES}
+						caching={caching}
+						cachedCount={cachedCount}
+						locked={gameOn}
+						onChange={updateSettings}
+						onClearCache={clearSoundCache}
+					/>
+				</div>
+				<div className="display">
+					<h1 className="display-text">
+						{preparing ? '⏳' : spelledNumber}
+					</h1>
+				</div>
+				{gameOn && (
+					<div className="game-score">
 						<span title="Numbers played">🏁 {solved.length} / {DIGITS.length}</span>
 						<span title="Mistakes">👎 {mistakes}</span>
 						<span title="Give-ups">🤷‍♂️ {giveUps}</span>
-						<span title="Time">⏱️ {formatDuration(Date.now() - gameStart.current)}</span>
+						<span title="Time">⏱️ {formatDuration((endedAt ?? Date.now()) - gameStart.current)}</span>
+					</div>
+				)}
+				{gameOn && (
+					<div className="game-actions">
 						<button
-							className="game-giveup"
 							aria-label="Give up"
 							title="Give up: reveal this one and move on"
+							disabled={target === null}
 							onClick={giveUp}
 						>
 							🤷‍♂️
 						</button>
+						<button
+							aria-label="Stop round"
+							title="Stop this round (the score stays until you restart or leave the game)"
+							disabled={target === null}
+							onClick={stopRound}
+						>
+							✋
+						</button>
+						<button
+							aria-label="Restart round"
+							title="Restart: start a new round"
+							disabled={preparing}
+							onClick={startRound}
+						>
+							🔄
+						</button>
 					</div>
-				) : result ? (
-					<div className="game-result">
-						<span title="Numbers played">🏁 {result.played} / {result.total}</span>
-						<span title="Mistakes">👎 {result.mistakes}</span>
-						<span title="Give-ups">🤷‍♂️ {result.giveUps}</span>
-						<span title="Time">⏱️ {formatDuration(result.ms)}</span>
-					</div>
-				) : (
-					<h1>
-						{preparing ? '⏳' : spelledNumber}
-					</h1>
 				)}
-			</hgroup>
+			</header>
 			<hgroup>
 				{DIGITS.map(n => {
 					const isGivenUp = gameOn && gaveUpNumbers.includes(n)
@@ -437,7 +452,6 @@ function App() {
 									// every language is hidden: nothing to say
 									setSpelledNumber('🤷‍♂️')
 								} else {
-									setResult(null)
 									playSound(lang.code, n)
 									setSpelledNumber(lang.numbers[n])
 								}

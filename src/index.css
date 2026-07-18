@@ -149,23 +149,6 @@ button:active {
 	}
 }
 
-/* give-up button, shown inline in the live game stats row above the board */
-.game-giveup {
-	width: auto;
-	margin: 0;
-	font-size: 22px;
-	line-height: 1;
-	padding: 8px 16px;
-	border: 1px solid var(--border);
-	border-radius: 12px;
-	background-color: var(--button-bg);
-	color: var(--button-fg);
-}
-
-.game-giveup:hover {
-	background-color: var(--surface-hover);
-}
-
 /* thumbs up/down that flashes once over the board after a guess */
 .game-feedback {
 	position: fixed;
@@ -191,43 +174,126 @@ button:active {
 	100% { opacity: 0; transform: scale(1.1); }
 }
 
-/* one fixed-height display segment above the board: the spelled name in normal
-   mode, the live stats + give-up button during a game, the final result after.
-   The fixed height means entering or leaving game mode never shifts the board. */
-.display-area {
-	height: 56px;
+/*
+ * The app bar: one sticky header with four segments laid out right-to-left —
+ * 1 toolbar (🕹️, language, ⚙️), 2 display (the spelled name), 3 game score and
+ * 4 game actions (3 and 4 only exist in game mode). DOM order is 1,2,3,4;
+ * row-reverse puts the toolbar at the right edge. On narrow screens the bar
+ * stacks the segments top-to-bottom in the same 1→4 order.
+ */
+.app-bar {
+	position: sticky;
+	top: 0;
+	z-index: 1000;
 	display: flex;
+	flex-direction: row-reverse;
 	align-items: center;
-	justify-content: center;
-	margin-bottom: 8px;
+	justify-content: flex-start;
+	gap: 12px;
+	min-height: 56px;
+	padding: 8px 12px;
+	background-color: var(--bg);
+	border-bottom: 1px solid var(--border);
 }
 
-.display-area h1 {
+@media (max-width: 760px) {
+	.app-bar {
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
+	}
+}
+
+/* segment 1: the controls */
+.toolbar {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+/* segment 2: fixed width so the bar never jitters as names change; text wider
+   than the box auto-scrolls back and forth (pure CSS marquee via container
+   units — no movement at all when the text fits) */
+.display {
+	width: 220px;
+	flex: none;
+	overflow: hidden;
+	container-type: inline-size;
+	display: flex;
+	justify-content: safe center;
+	align-items: center;
+}
+
+.display-text {
 	margin: 0;
+	white-space: nowrap;
+	animation: display-overflow-scroll 6s ease-in-out infinite alternate;
 }
 
-/* game stats row (live during the game, the final result after); single line
-   that scales down on narrow screens so it fits the fixed display segment */
-.game-result {
+@keyframes display-overflow-scroll {
+	from { transform: translateX(0); }
+	to { transform: translateX(min(0px, calc(100cqw - 100%))); }
+}
+
+/* segment 3: live game stats (frozen once the round ends) */
+.game-score {
 	display: flex;
-	gap: clamp(6px, 1.5vw, 20px);
-	justify-content: center;
 	align-items: center;
-	font-size: clamp(0.95rem, 3.5vw, 1.5rem);
+	gap: clamp(6px, 1.5vw, 16px);
+	font-size: clamp(0.95rem, 3vw, 1.25rem);
 	font-weight: bold;
 	font-variant-numeric: tabular-nums;
 	white-space: nowrap;
 }
 
-/* fixed top-right control bar: language dropdown, settings */
-.top-controls {
-	position: fixed;
-	top: 10px;
-	right: 10px;
-	z-index: 1000;
+/* segment 4: round actions (🤷‍♂️ give up, ✋ stop, 🔄 restart) */
+.game-actions {
 	display: flex;
-	align-items: flex-start;
-	gap: 8px;
+	align-items: center;
+	gap: 6px;
+}
+
+.game-actions button {
+	width: auto;
+	font-size: 20px;
+	line-height: 1;
+	padding: 8px 12px;
+	margin: 0;
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	background-color: var(--button-bg);
+	color: var(--button-fg);
+}
+
+.game-actions button:hover {
+	background-color: var(--surface-hover);
+}
+
+.game-actions button:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+/* smooth unfold when the game segments appear (modern CSS entry transition;
+   browsers without @starting-style / interpolate-size just show them instantly) */
+:root {
+	interpolate-size: allow-keywords;
+}
+
+.game-score,
+.game-actions {
+	height: auto;
+	overflow: hidden;
+	transition: opacity 0.3s ease, transform 0.3s ease, height 0.3s ease;
+}
+
+@starting-style {
+	.game-score,
+	.game-actions {
+		opacity: 0;
+		transform: translateY(-8px);
+		height: 0;
+	}
 }
 
 .language-select {
