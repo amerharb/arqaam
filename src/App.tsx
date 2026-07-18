@@ -419,7 +419,7 @@ function App() {
 				{!gameOn && result ? (
 					<div className="game-result">
 						<span title="Numbers played">🏁 {result.played} / {result.total}</span>
-						<span title="Mistakes">❌ {result.mistakes}</span>
+						<span title="Mistakes">👎 {result.mistakes}</span>
 						<span title="Give-ups">🤷‍♂️ {result.giveUps}</span>
 						<span title="Time">⏱️ {formatDuration(result.ms)}</span>
 					</div>

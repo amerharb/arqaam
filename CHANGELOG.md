@@ -15,6 +15,8 @@
 - Add a feature flag (`beta`) to hide unfinished languages from production
   builds while keeping them visible in development, like the sister projects
 ### Changed
+- In the game result, show the mistakes count with 👎 instead of ❌, matching
+  the marker shown on a wrong guess
 - Replace the generated favicon set (ico + five pngs) with a single hand-drawn
   `favicon.svg` (a 1-2-3-4 keypad tile in the old icon's colors), like the
   sister projects Colors and Week; the manifest now uses the svg, matches the
