@@ -3,6 +3,10 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
 ## [0.14.0] 2026-07-18
+### Added
+- Add a settings panel (⚙️ top right) like the sister projects, with a Theme
+  option (system / light / dark icons, system is the default); the choice is
+  saved in localStorage and applied before first paint to avoid a flash
 ### Changed
 - Migrate the build from Create React App (react-scripts) to Vite, and switch the
   package manager from yarn to npm, to align with the sister projects
@@ -12,6 +16,8 @@
 - Upgrade to React 19 and TypeScript 6 (and bump the other dependencies to match
   the sister projects); the version is bumped to 0.14.0 to align with them
 ### Removed
+- The page title and its double-click download of all sound files; an
+  alternative (like the sister projects' flight mode) will come later
 - The Create React App test setup (`react-scripts` test tooling and the
   `@testing-library/*` dev dependencies)
 

@@ -24,6 +24,9 @@ Sister project of [Flags](https://github.com/amerharb/flags),
 Pick a language by clicking its flag, then click a number (0–10) to hear it
 pronounced and see it spelled out in that language.
 
+- Settings (⚙️ top right): theme (system / light / dark, system is the default),
+  saved in localStorage and remembered between visits.
+
 ## How to contribute
 ### Media files
 All that is needed to support a new language is 12 sound files in AAC format: one

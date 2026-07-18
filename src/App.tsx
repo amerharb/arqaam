@@ -1,6 +1,8 @@
 import './App.css'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Analytics } from '@vercel/analytics/react'
+import SettingsPanel from './SettingsPanel'
+import { Settings, DEFAULT_SETTINGS, loadSettings, saveSettings, applyTheme } from './settingsStore'
 import { Lang } from './lang/Lang'
 import { ar } from './lang/ar'
 import { de } from './lang/de'
@@ -18,6 +20,20 @@ function App() {
 	const DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 	const [lang, setSelectedLanguage] = useState(LANGUAGES[0])
 	const [spelledNumber, setSpelledNumber] = useState('')
+
+	// user settings (theme only for now)
+	const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS)
+	useEffect(() => {
+		const loaded = loadSettings()
+		setSettings(loaded)
+		applyTheme(loaded.theme)
+	}, [])
+
+	const updateSettings = (next: Settings) => {
+		setSettings(next)
+		saveSettings(next)
+		applyTheme(next.theme)
+	}
 
 	const handleLanguageChange = async (lang: Lang) => {
 		await playSound(lang.code)
@@ -66,48 +82,6 @@ function App() {
 		}
 	}
 
-	async function cacheAllAudioFiles() {
-		console.time('cacheAllAudioFiles')
-		try {
-			const digitUrls = LANGUAGES.flatMap(lang => DIGITS.map(n => `/sounds/${lang.code}/${n}.aac`))
-			const langUrls = LANGUAGES.map(lang => `/sounds/${lang.code}/${lang.code}.aac`)
-			const audioUrls = [...digitUrls, ...langUrls]
-
-			await Promise.all([
-				caches.delete('audio-cache'),
-				caches.delete('audio-cache-timestamps'),
-			])
-			const [audioCache, audioCacheTimestamps] = await Promise.all([
-				caches.open('audio-cache'),
-				caches.open('audio-cache-timestamps'),
-			])
-
-			await Promise.all(
-				audioUrls.map(async url => {
-					try {
-						const res = await fetch(url)
-						if (res.ok && res.body && res.headers.get('Content-Length') && res.headers.get('Content-Length') !== '0') {
-							await Promise.all([
-								audioCache.put(url, res.clone()),
-								audioCacheTimestamps.put(url, new Response(Date.now().toString())),
-							])
-						} else {
-							console.warn(`Failed to cache: ${url} (status: ${res.status})`)
-						}
-					} catch (err) {
-						console.error(`Error fetching ${url}:`, err)
-					}
-				}),
-			)
-
-			console.log('Audio files cached successfully')
-		} catch (error) {
-			console.error('Failed to cache audio files:', error)
-		} finally {
-			console.timeEnd('cacheAllAudioFiles')
-		}
-	}
-
 	const playSound = useCallback(async (langCode: string, n?: number) => {
 		try {
 			const audioUrl = `/sounds/${langCode}/${n ?? langCode}.aac`
@@ -121,21 +95,14 @@ function App() {
 		}
 	}, [])
 
-	const pageTitle = 'Arqaam Web'
 	return (
 		<div className="Arqaam">
-			<h1
-				onDoubleClick={() => {
-					const h1 = document.querySelector('h1')
-					if (!h1) return
-					h1.style.backgroundColor = 'darkgreen'
-					h1.textContent = 'Downloading...'
-					cacheAllAudioFiles().then(() => {
-						h1.style.backgroundColor = ''
-						h1.textContent = pageTitle
-					})
-				}}
-			>{pageTitle}</h1>
+			<div className="top-controls">
+				<SettingsPanel
+					settings={settings}
+					onChange={updateSettings}
+				/>
+			</div>
 			<hgroup>
 				{LANGUAGES.map((l) => (
 					<button
