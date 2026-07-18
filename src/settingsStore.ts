@@ -11,11 +11,15 @@ export type Settings = {
 	// language codes the user chose to hide from the main screen; empty = show
 	// everything, so newly added languages are visible by default
 	hiddenLanguages: string[],
+	// when on, all visible sounds are downloaded to the cache, and newly shown
+	// languages are cached as soon as they are enabled
+	flightMode: boolean,
 }
 
 export const DEFAULT_SETTINGS: Settings = {
 	theme: 'system',
 	hiddenLanguages: [],
+	flightMode: false,
 }
 
 const STORAGE_KEY = 'arqaam:settings'

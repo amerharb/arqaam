@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Analytics } from '@vercel/analytics/react'
 import SettingsPanel from './SettingsPanel'
 import { Settings, DEFAULT_SETTINGS, loadSettings, saveSettings, applyTheme } from './settingsStore'
+import { getAudioBlob, ensureCached, idbCount, idbClear } from './audioCache'
 import { Lang } from './lang/Lang'
 import { ar } from './lang/ar'
 import { de } from './lang/de'
@@ -22,6 +23,42 @@ function App() {
 	// code of the selected language (the spoken and spelled number words)
 	const [selectedCode, setSelectedCode] = useState(ALL_LANGUAGES[0].code)
 	const [spelledNumber, setSpelledNumber] = useState('')
+	// true while flight-mode downloads are in progress, to show it on the toggle
+	const [caching, setCaching] = useState(false)
+	// how many sound files are currently in the cache, shown in settings
+	const [cachedCount, setCachedCount] = useState(0)
+
+	const refreshCacheCount = useCallback(async () => {
+		try {
+			setCachedCount(await idbCount())
+		} catch {
+			// leave the previous count
+		}
+	}, [])
+	useEffect(() => {
+		refreshCacheCount()
+	}, [refreshCacheCount])
+
+	// delete only the downloaded sound files (settings stay); not allowed in flight mode
+	const clearSoundCache = useCallback(async () => {
+		try {
+			await idbClear()
+		} catch {
+			// ignore
+		}
+		setCachedCount(0)
+	}, [])
+
+	// Flight mode: download the given sounds into the cache, showing the busy state.
+	const cacheAudioUrls = useCallback(async (audioUrls: string[]) => {
+		setCaching(true)
+		try {
+			await ensureCached(audioUrls)
+		} finally {
+			setCaching(false)
+			refreshCacheCount()
+		}
+	}, [refreshCacheCount])
 
 	// user settings (theme + which languages to show)
 	const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS)
@@ -47,6 +84,25 @@ function App() {
 	}, [])
 
 	const updateSettings = (next: Settings) => {
+		// flight mode: download what is (or becomes) visible. Each language needs
+		// the digits 0–10 plus its language-name sound.
+		const visibleLangs = ALL_LANGUAGES.filter(l => !next.hiddenLanguages.includes(l.code))
+		const urlsFor = (langs: typeof visibleLangs) =>
+			langs.flatMap(l => [
+				...DIGITS.map(n => `/sounds/${l.code}/${n}.aac`),
+				`/sounds/${l.code}/${l.code}.aac`,
+			])
+		if (next.flightMode && !settings.flightMode) {
+			// just switched on: cache everything currently visible
+			cacheAudioUrls(urlsFor(visibleLangs))
+		} else if (next.flightMode) {
+			// already on: cache only the languages that just became visible
+			const newLangs = visibleLangs.filter(l => settings.hiddenLanguages.includes(l.code))
+			if (newLangs.length > 0) {
+				cacheAudioUrls(urlsFor(newLangs))
+			}
+		}
+
 		setSettings(next)
 		saveSettings(next)
 		applyTheme(next.theme)
@@ -71,59 +127,22 @@ function App() {
 		setSpelledNumber('')
 	}
 
-	async function getAudio(audioUrl: string) {
-		const TTL = 1000 * 60 * 60 * 24 * 7 // 7 days
-		if ('caches' in window) {
-			const audioCache = await caches.open('audio-cache')
-			const audioCacheTimestamps = await caches.open('audio-cache-timestamps')
-			const cachedResponse = await audioCache.match(audioUrl)
-
-			if (cachedResponse) {
-				const timestampResponse = await audioCacheTimestamps.match(audioUrl)
-				if (timestampResponse) {
-					const timestamp = await timestampResponse.text()
-					const cachedTime = Number(timestamp)
-					const currentTime = Date.now()
-
-					if (currentTime - cachedTime > TTL) {
-						await Promise.all([
-							await audioCache.delete(audioUrl),
-							await audioCacheTimestamps.delete(audioUrl),
-						])
-					} else {
-						return cachedResponse
-					}
-				}
-			}
-
-			const response = await fetch(audioUrl)
-			// skip caching if response empty
-			if (!response.headers.get('Content-Length') || response.headers.get('Content-Length') === '0') {
-				return response
-			}
-
-			await audioCache.put(audioUrl, response.clone())
-			const timestampResponse = new Response(Date.now().toString())
-			await audioCacheTimestamps.put(audioUrl, timestampResponse)
-
-			return response
-		} else {
-			return await fetch(audioUrl)
-		}
-	}
-
+	// Play a sound from the cache (IndexedDB, works in Safari Lockdown Mode) or
+	// the network, storing it for next time.
 	const playSound = useCallback(async (langCode: string, n?: number) => {
 		try {
 			const audioUrl = `/sounds/${langCode}/${n ?? langCode}.aac`
-			const response = await getAudio(audioUrl)
-			const blob = await response.blob()
+			const blob = await getAudioBlob(audioUrl)
+			if (!blob) return
 			const objectUrl = URL.createObjectURL(blob)
 			const audio = new Audio(objectUrl)
+			audio.onended = () => URL.revokeObjectURL(objectUrl)
 			await audio.play()
+			refreshCacheCount() // playing may have added the file to the cache
 		} catch (e) {
 			console.error(e)
 		}
-	}, [])
+	}, [refreshCacheCount])
 
 	return (
 		<div className="Arqaam">
@@ -141,7 +160,10 @@ function App() {
 				<SettingsPanel
 					settings={settings}
 					languages={ALL_LANGUAGES}
+					caching={caching}
+					cachedCount={cachedCount}
 					onChange={updateSettings}
+					onClearCache={clearSoundCache}
 				/>
 			</div>
 			<hgroup>

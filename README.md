@@ -24,10 +24,14 @@ Sister project of [Flags](https://github.com/amerharb/flags),
 Pick a language from the dropdown in the top right, then click a number (0–10)
 to hear it pronounced and see it spelled out in that language.
 
-- Settings (⚙️ top right): theme (system / light / dark, system is the default)
-  and a language checklist to show/hide languages (with ✅/⬜
-  select-all/deselect-all buttons). Saved in localStorage and remembered
+- Settings (⚙️ top right): theme (system / light / dark, system is the default),
+  a language checklist to show/hide languages (with ✅/⬜
+  select-all/deselect-all buttons), a flight mode toggle (✈️), and cache info
+  (🔊 count and a 🗑️ clear button). Saved in localStorage and remembered
   between visits.
+- Flight mode (✈️): downloads all visible sounds into the browser's cache
+  (IndexedDB) so they play offline; anything newly shown while it is on is
+  downloaded right away. Turning it off keeps the cached files (🗑️ clears them).
 
 ## URL parameters
 For a shareable/deep-linked view:

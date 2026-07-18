@@ -13,7 +13,16 @@
   language hidden a number click shows 🤷‍♂️ instead of playing a sound
 - Support a URL parameter for a shareable view: `l` sets which languages are
   shown with the first one selected (e.g. `?l=en,ar`), like the sister projects
+- Add a flight mode toggle (✈️) in settings, like the sister projects: downloads
+  all visible sounds, caches newly shown languages right away while on, and
+  keeps the cached files when turned off. Next to it, the number of cached
+  sound files (🔊) and a clear sound cache button (🗑️) that only works outside
+  flight mode
 ### Changed
+- Cache all sounds in a single store (IndexedDB) instead of the previous
+  Cache Storage pair (files + timestamps). Simpler, works in Safari Lockdown
+  Mode, and drops the 7-day TTL (the cache lives until cleared with the 🗑️
+  button)
 - Replace the row of flag buttons with a language dropdown in the top bar,
   like the sister projects
 - Show each language under its native name (عربي, Deutsch, Svenska, Français,
