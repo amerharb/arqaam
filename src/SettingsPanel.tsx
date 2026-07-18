@@ -15,11 +15,13 @@ type Props = {
 	caching: boolean,
 	// number of sound files currently in the cache
 	cachedCount: number,
+	// when true (game in progress), the language list can't be changed
+	locked: boolean,
 	onChange: (settings: Settings) => void,
 	onClearCache: () => void,
 }
 
-export default function SettingsPanel({ settings, languages, caching, cachedCount, onChange, onClearCache }: Readonly<Props>) {
+export default function SettingsPanel({ settings, languages, caching, cachedCount, locked, onChange, onClearCache }: Readonly<Props>) {
 	const [open, setOpen] = useState(false)
 	const containerRef = useRef<HTMLDivElement | null>(null)
 
@@ -86,6 +88,7 @@ export default function SettingsPanel({ settings, languages, caching, cachedCoun
 								type="button"
 								aria-label="Select all languages"
 								title="Select all"
+								disabled={locked}
 								onClick={showAllLanguages}
 							>
 								✅
@@ -94,6 +97,7 @@ export default function SettingsPanel({ settings, languages, caching, cachedCoun
 								type="button"
 								aria-label="Deselect all languages"
 								title="Deselect all"
+								disabled={locked}
 								onClick={hideAllLanguages}
 							>
 								⬜
@@ -107,6 +111,7 @@ export default function SettingsPanel({ settings, languages, caching, cachedCoun
 										<input
 											type="checkbox"
 											checked={shown}
+											disabled={locked}
 											onChange={() => toggleLanguage(l.code)}
 										/>
 										{l.display}

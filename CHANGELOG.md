@@ -20,6 +20,19 @@
   keeps the cached files when turned off. Next to it, the number of cached
   sound files (🔊) and a clear sound cache button (🗑️) that only works outside
   flight mode
+- Add a guessing game (🎮 in the top bar), like the sister projects: a random
+  number is spoken in the selected language and you tap the matching button.
+  A correct tap flashes 👍 with a chime and disables that number; a wrong tap
+  flashes 👎 with a buzz and temporarily disables it (with a 👎 marker) until
+  the round is won. The give-up button (🤷‍♂️) reveals the current number,
+  marks it 🤷‍♂️ and plays a give-up sound (counted as played, tracked
+  separately from mistakes). The numbers stay in order (not shuffled). The
+  game ends when every number has been played, or when you press 🎮 again;
+  either way it shows played / mistakes / give-ups / time. The language is
+  locked during a game; theme and flight mode stay changeable. Prompt sounds
+  are pre-loaded before the game starts so gameplay never waits on the network,
+  and answering the last number early no longer leaves a pending prompt playing
+  (the next-prompt timer is cancelled)
 ### Changed
 - Cache all sounds in a single store (IndexedDB) instead of the previous
   Cache Storage pair (files + timestamps). Simpler, works in Safari Lockdown

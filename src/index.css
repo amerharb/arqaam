@@ -66,6 +66,7 @@ button:active {
    width and font-size shrink together (clamp) instead of the old fixed
    40px font in a 7%-wide button that overflowed on narrow screens */
 .button-number {
+	position: relative;
 	line-height: 1;
 	color: #61dafb;
 	background-color: darkblue;
@@ -73,6 +74,118 @@ button:active {
 	font-size: clamp(22px, 4.5vw, 40px);
 	padding: 15px 0;
 	margin: clamp(4px, 1vw, 10px);
+}
+
+/* a solved or given-up number is disabled and dimmed during the game */
+.button-number:disabled {
+	opacity: 0.35;
+	cursor: default;
+}
+
+/* a number guessed wrong this round: temporarily disabled but kept legible, with a 👎 */
+.button-number.wrong:disabled {
+	opacity: 0.7;
+	cursor: not-allowed;
+}
+
+/* corner state marker (👍 solved / 🤷‍♂️ given up / 👎 wrong), with a soft shadow to stay legible */
+.swatch-mark {
+	position: absolute;
+	top: 3px;
+	right: 5px;
+	font-size: 14px;
+	line-height: 1;
+	text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+}
+
+/* game-mode toggle, sits in the top control bar */
+.game-toggle {
+	width: auto;
+	font-size: 20px;
+	line-height: 1;
+	padding: 6px 10px;
+	margin: 0;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	background-color: var(--button-bg);
+	color: var(--button-fg);
+}
+
+.game-toggle:hover {
+	background-color: var(--surface-hover);
+}
+
+.game-toggle.on {
+	transform: scale(0.95);
+	box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35);
+	background-color: var(--surface-hover);
+}
+
+.game-toggle:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+/* pulse while pre-loading the game's sounds */
+@media (prefers-reduced-motion: no-preference) {
+	.game-toggle.busy {
+		animation: flight-mode-pulse 1s ease-in-out infinite;
+	}
+}
+
+/* give-up button, shown centered below the score during a game */
+.game-giveup {
+	display: block;
+	width: auto;
+	margin: 4px auto 0;
+	font-size: 32px;
+	line-height: 1;
+	padding: 10px 20px;
+	border: 1px solid var(--border);
+	border-radius: 12px;
+	background-color: var(--button-bg);
+	color: var(--button-fg);
+}
+
+.game-giveup:hover {
+	background-color: var(--surface-hover);
+}
+
+/* thumbs up/down that flashes once over the board after a guess */
+.game-feedback {
+	position: fixed;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 30vmin;
+	pointer-events: none;
+	z-index: 1200;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.game-feedback {
+		animation: game-feedback-flash 0.7s ease-out forwards;
+	}
+}
+
+@keyframes game-feedback-flash {
+	0% { opacity: 0; transform: scale(0.6); }
+	25% { opacity: 1; transform: scale(1); }
+	70% { opacity: 1; transform: scale(1); }
+	100% { opacity: 0; transform: scale(1.1); }
+}
+
+/* end-of-game result: score, mistakes, give-ups, time */
+.game-result {
+	display: flex;
+	gap: 20px;
+	justify-content: center;
+	align-items: center;
+	font-size: 1.5rem;
+	font-weight: bold;
+	font-variant-numeric: tabular-nums;
+	flex-wrap: wrap;
 }
 
 /* fixed top-right control bar: language dropdown, settings */
@@ -197,6 +310,17 @@ button:active {
 .settings-check input {
 	margin: 0;
 	cursor: pointer;
+}
+
+/* controls locked while a game is running */
+.settings-select-all button:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.settings-check:has(input:disabled) {
+	cursor: default;
+	opacity: 0.6;
 }
 
 /* flight mode + cache info on one row */

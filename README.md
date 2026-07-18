@@ -32,6 +32,16 @@ to hear it pronounced and see it spelled out in that language.
 - Flight mode (✈️): downloads all visible sounds into the browser's cache
   (IndexedDB) so they play offline; anything newly shown while it is on is
   downloaded right away. Turning it off keeps the cached files (🗑️ clears them).
+- Game (🎮 in the top bar): start a guessing game — a random number is spoken in
+  the selected language and you tap the matching button (👍 correct, 👎 wrong).
+  The numbers stay in order (they are not shuffled). A wrong number is
+  temporarily disabled with a 👎 marker until you find the correct one. Stuck?
+  The give-up button (🤷‍♂️) reveals it and plays a give-up sound (tracked
+  separately from mistakes). It runs through all eleven numbers, then shows how
+  many you played, your mistakes, give-ups, and your time; press 🎮 again to
+  stop early. Theme and flight mode stay changeable mid-game; the language is
+  locked. Needs at least one language visible. Prompt sounds are pre-loaded so
+  gameplay never waits on the network.
 
 ## URL parameters
 For a shareable/deep-linked view:
