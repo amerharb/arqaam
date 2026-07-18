@@ -5,7 +5,6 @@ Small react project to pronounce numbers from zero to ten in several languages.
 Sister project of [Flags](https://github.com/amerharb/flags),
 [Colors](https://github.com/amerharb/colors) and
 [Week](https://github.com/amerharb/week).
-![img.png](img.png)
 
 ## Languages supported
 - Arabic
@@ -22,7 +21,8 @@ Sister project of [Flags](https://github.com/amerharb/flags),
 
 ## How it works
 Pick a language from the dropdown in the top right, then click a number (0–10)
-to hear it pronounced and see it spelled out in that language.
+to hear it pronounced and see it spelled out in that language. Click the number
+again (▶ while it plays) to stop.
 
 - Settings (⚙️ top right): theme (system / light / dark, system is the default),
   a language checklist to show/hide languages (with ✅/⬜
@@ -42,6 +42,8 @@ to hear it pronounced and see it spelled out in that language.
   stop early. Theme and flight mode stay changeable mid-game; the language is
   locked. Needs at least one language visible. Prompt sounds are pre-loaded so
   gameplay never waits on the network.
+- First visit: the starting language and which languages are shown come from your
+  browser's language settings.
 
 ## URL parameters
 For a shareable/deep-linked view:
@@ -99,3 +101,9 @@ Vercel integration with GitHub.
 - Finnish: [www.ttsfree.com](https://ttsfree.com/text-to-speech/finnish-finland#google_vignette)
 - Russian: [Wiktionary RU](https://ru.wiktionary.org/)
 - Spanish: [https://ttsfree.com/text-to-speech/spanish-spain]()
+
+### For graphics
+The favicon was generated with [favicon.io](https://favicon.io/) from the
+[Twitter Twemoji](https://github.com/twitter/twemoji) `1f522` (🔢) graphic,
+Copyright 2020 Twitter, Inc and other contributors, licensed under
+[CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/).

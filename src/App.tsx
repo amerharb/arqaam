@@ -2,7 +2,8 @@ import './App.css'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Analytics } from '@vercel/analytics/react'
 import SettingsPanel from './SettingsPanel'
-import { Settings, DEFAULT_SETTINGS, loadSettings, saveSettings, applyTheme } from './settingsStore'
+import { isVisible } from './featureFlags'
+import { Settings, DEFAULT_SETTINGS, loadSettings, saveSettings, applyTheme, preferredLanguage } from './settingsStore'
 import { getAudioBlob, ensureCached, idbCount, idbClear } from './audioCache'
 import { Lang } from './lang/Lang'
 import { ar } from './lang/ar'
@@ -28,12 +29,15 @@ function playFx(name: 'correct' | 'wrong' | 'giveup') {
 }
 
 function App() {
-	// everything the build supports
-	const ALL_LANGUAGES: Lang[] = [ar, en, de, sv, fr, tr, fa, ru, fi, es]
+	// everything the build supports (after the beta feature flag)
+	const ALL_LANGUAGES: Lang[] = [ar, en, de, sv, fr, tr, fa, ru, fi, es].filter(isVisible)
 	const DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-	// code of the selected language (the spoken and spelled number words)
-	const [selectedCode, setSelectedCode] = useState(ALL_LANGUAGES[0].code)
+	// code of the selected language (the spoken and spelled number words); defaults
+	// to the browser's preferred language on first load
+	const [selectedCode, setSelectedCode] = useState(() => preferredLanguage())
 	const [spelledNumber, setSpelledNumber] = useState('')
+	// number whose sound is playing, to show the play icon on its button
+	const [playingNumber, setPlayingNumber] = useState<number | null>(null)
 	// true while flight-mode downloads are in progress, to show it on the toggle
 	const [caching, setCaching] = useState(false)
 	// how many sound files are currently in the cache, shown in settings
@@ -56,6 +60,7 @@ function App() {
 			URL.revokeObjectURL(playingAudio.current.src)
 			playingAudio.current = null
 		}
+		setPlayingNumber(null)
 	}, [])
 
 	const refreshCacheCount = useCallback(async () => {
@@ -159,7 +164,7 @@ function App() {
 
 	// Play a sound from the cache (IndexedDB, works in Safari Lockdown Mode) or
 	// the network, storing it for next time. Starting a new sound stops the one
-	// currently playing.
+	// currently playing. Number sounds show the play icon on their button.
 	const playSound = useCallback(async (langCode: string, n?: number) => {
 		try {
 			const audioUrl = `/sounds/${langCode}/${n ?? langCode}.aac`
@@ -171,14 +176,38 @@ function App() {
 				URL.revokeObjectURL(playingAudio.current.src)
 			}
 			const audio = new Audio(objectUrl)
-			audio.onended = () => URL.revokeObjectURL(objectUrl)
+			audio.onended = () => {
+				URL.revokeObjectURL(objectUrl)
+				setPlayingNumber(null)
+			}
 			playingAudio.current = audio
 			await audio.play()
+			setPlayingNumber(n ?? null)
 			refreshCacheCount() // playing may have added the file to the cache
 		} catch (e) {
 			console.error(e)
 		}
 	}, [refreshCacheCount])
+
+	// play a number sound without touching the play-icon UI (used by the game,
+	// where a ▶ on the target button would reveal the answer)
+	const playFile = useCallback(async (langCode: string, n: number) => {
+		try {
+			const blob = await getAudioBlob(`/sounds/${langCode}/${n}.aac`)
+			if (!blob) return
+			const objectUrl = URL.createObjectURL(blob)
+			if (playingAudio.current) {
+				playingAudio.current.pause()
+				URL.revokeObjectURL(playingAudio.current.src)
+			}
+			const audio = new Audio(objectUrl)
+			audio.onended = () => URL.revokeObjectURL(objectUrl)
+			playingAudio.current = audio
+			await audio.play()
+		} catch (e) {
+			console.error(e)
+		}
+	}, [])
 
 	// ---- Game mode ----
 	const [gameOn, setGameOn] = useState(false)
@@ -231,7 +260,7 @@ function App() {
 		gameStart.current = Date.now()
 		setTarget(first)
 		setGameOn(true)
-		playSound(lang.code, first)
+		playFile(lang.code, first)
 	}
 
 	const endGame = () => {
@@ -281,7 +310,7 @@ function App() {
 			setTarget(next)
 			// let the feedback land before the next prompt
 			promptTimer.current = setTimeout(() => {
-				if (lang) playSound(lang.code, next)
+				if (lang) playFile(lang.code, next)
 			}, 650)
 		}
 	}
@@ -358,12 +387,15 @@ function App() {
 					return (
 						<button
 							key={`number-${n}`}
-							className={'button-number' + (isWrong ? ' wrong' : '')}
+							className={'button-number' + (playingNumber === n ? ' playing' : '') + (isWrong ? ' wrong' : '')}
 							title={gameOn ? '' : (lang ? lang.numbers[n] : '🤷‍♂️')}
 							disabled={isSolved || isGivenUp || isWrong}
 							onClick={() => {
 								if (gameOn) {
 									guessNumber(n)
+								} else if (playingNumber === n) {
+									// clicking the playing number again stops the sound
+									stopSound()
 								} else if (!lang) {
 									// every language is hidden: nothing to say
 									setSpelledNumber('🤷‍♂️')
@@ -375,6 +407,7 @@ function App() {
 							}}
 						>
 							{n}
+							{playingNumber === n && <span className="play-icon">▶</span>}
 							{isSolved && <span className="swatch-mark">👍</span>}
 							{isGivenUp && <span className="swatch-mark">🤷‍♂️</span>}
 							{isWrong && <span className="swatch-mark">👎</span>}

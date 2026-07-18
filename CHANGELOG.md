@@ -3,6 +3,23 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
 ## [0.15.0] 2026-07-18
+### Added
+- On first visit, pick the starting language from the browser
+  (navigator.language) and show only the browser's languages
+  (navigator.languages), like the sister projects; everything else starts
+  hidden (all languages can still be enabled in settings)
+- Show a play icon (▶) on the number button while its sound is playing, keep
+  the button pressed down, and stop the sound when the playing number is
+  clicked again, like the sister projects. Game prompts don't show the icon
+  (it would reveal the answer)
+- Add a feature flag (`beta`) to hide unfinished languages from production
+  builds while keeping them visible in development, like the sister projects
+### Removed
+- Leftover Create React App / favicon-generator files: `public/about.txt`,
+  `public/site.webmanifest` (duplicate of `manifest.json`), the empty
+  `public/favicon_io` folder, and the outdated `img.png` screenshot in the
+  README (the favicon's Twemoji CC-BY 4.0 attribution moved to the README
+  Credits section)
 
 ## [0.14.0] 2026-07-18
 ### Added
