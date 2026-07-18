@@ -15,6 +15,14 @@
 - Add a feature flag (`beta`) to hide unfinished languages from production
   builds while keeping them visible in development, like the sister projects
 ### Changed
+- Unify the display line into one fixed-height segment (the spelled name, the
+  live game stats and the final result all share it), so entering or leaving
+  game mode never shifts the board; on narrow screens the stats row scales
+  down to stay on one line
+- Move the name/score display line above the board (it was below), show the
+  game stats (🏁 played 👎 mistakes 🤷‍♂️ give-ups ⏱️ time) live during the
+  game — the time ticks every second — instead of only as an end-of-game
+  result, and move the give-up button (🤷‍♂️) into that live stats row
 - In the game result, show the mistakes count with 👎 instead of ❌, matching
   the marker shown on a wrong guess
 - Replace the generated favicon set (ico + five pngs) with a single hand-drawn

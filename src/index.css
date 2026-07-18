@@ -149,14 +149,13 @@ button:active {
 	}
 }
 
-/* give-up button, shown centered below the score during a game */
+/* give-up button, shown inline in the live game stats row above the board */
 .game-giveup {
-	display: block;
 	width: auto;
-	margin: 4px auto 0;
-	font-size: 32px;
+	margin: 0;
+	font-size: 22px;
 	line-height: 1;
-	padding: 10px 20px;
+	padding: 8px 16px;
 	border: 1px solid var(--border);
 	border-radius: 12px;
 	background-color: var(--button-bg);
@@ -192,16 +191,32 @@ button:active {
 	100% { opacity: 0; transform: scale(1.1); }
 }
 
-/* end-of-game result: score, mistakes, give-ups, time */
+/* one fixed-height display segment above the board: the spelled name in normal
+   mode, the live stats + give-up button during a game, the final result after.
+   The fixed height means entering or leaving game mode never shifts the board. */
+.display-area {
+	height: 56px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 8px;
+}
+
+.display-area h1 {
+	margin: 0;
+}
+
+/* game stats row (live during the game, the final result after); single line
+   that scales down on narrow screens so it fits the fixed display segment */
 .game-result {
 	display: flex;
-	gap: 20px;
+	gap: clamp(6px, 1.5vw, 20px);
 	justify-content: center;
 	align-items: center;
-	font-size: 1.5rem;
+	font-size: clamp(0.95rem, 3.5vw, 1.5rem);
 	font-weight: bold;
 	font-variant-numeric: tabular-nums;
-	flex-wrap: wrap;
+	white-space: nowrap;
 }
 
 /* fixed top-right control bar: language dropdown, settings */
