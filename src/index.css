@@ -263,6 +263,29 @@ button:active {
 	}
 }
 
+/* small about line at the very bottom of the panel */
+.settings-about {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
+	margin-top: 14px;
+	padding-top: 12px;
+	border-top: 1px solid var(--border);
+	font-size: 12px;
+	color: var(--muted, #888);
+	font-variant-numeric: tabular-nums;
+}
+
+.settings-about a {
+	color: var(--link, #4a6fa5);
+	text-decoration: none;
+}
+
+.settings-about a:hover {
+	text-decoration: underline;
+}
+
 .settings-segmented {
 	display: flex;
 	gap: 6px;

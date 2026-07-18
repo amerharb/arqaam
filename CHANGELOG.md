@@ -13,6 +13,8 @@
   language hidden a number click shows 🤷‍♂️ instead of playing a sound
 - Support a URL parameter for a shareable view: `l` sets which languages are
   shown with the first one selected (e.g. `?l=en,ar`), like the sister projects
+- Add an About section at the bottom of the settings panel showing the app
+  version and a link to the developer's GitHub, like the sister projects
 - Add a flight mode toggle (✈️) in settings, like the sister projects: downloads
   all visible sounds, caches newly shown languages right away while on, and
   keeps the cached files when turned off. Next to it, the number of cached
