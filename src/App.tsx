@@ -22,7 +22,7 @@ const randomOf = <T,>(items: T[]): T => items[Math.floor(Math.random() * items.l
 // short win/lose feedback sounds
 function playFx(name: 'correct' | 'wrong' | 'giveup') {
 	try {
-		new Audio(`/sounds/fx/${name}.aac`).play().catch(() => {})
+		new Audio(`/sound/fx/${name}.aac`).play().catch(() => {})
 	} catch {
 		// ignore
 	}
@@ -124,8 +124,8 @@ function App() {
 		const visibleLangs = ALL_LANGUAGES.filter(l => !next.hiddenLanguages.includes(l.code))
 		const urlsFor = (langs: typeof visibleLangs) =>
 			langs.flatMap(l => [
-				...DIGITS.map(n => `/sounds/${l.code}/${n}.aac`),
-				`/sounds/${l.code}/${l.code}.aac`,
+				...DIGITS.map(n => `/sound/lang/${l.code}/${n}.aac`),
+				`/sound/lang/${l.code}/${l.code}.aac`,
 			])
 		if (next.flightMode && !settings.flightMode) {
 			// just switched on: cache everything currently visible
@@ -167,7 +167,7 @@ function App() {
 	// currently playing. Number sounds show the play icon on their button.
 	const playSound = useCallback(async (langCode: string, n?: number) => {
 		try {
-			const audioUrl = `/sounds/${langCode}/${n ?? langCode}.aac`
+			const audioUrl = `/sound/lang/${langCode}/${n ?? langCode}.aac`
 			const blob = await getAudioBlob(audioUrl)
 			if (!blob) return
 			const objectUrl = URL.createObjectURL(blob)
@@ -193,7 +193,7 @@ function App() {
 	// where a ▶ on the target button would reveal the answer)
 	const playFile = useCallback(async (langCode: string, n: number) => {
 		try {
-			const blob = await getAudioBlob(`/sounds/${langCode}/${n}.aac`)
+			const blob = await getAudioBlob(`/sound/lang/${langCode}/${n}.aac`)
 			if (!blob) return
 			const objectUrl = URL.createObjectURL(blob)
 			if (playingAudio.current) {
@@ -246,7 +246,7 @@ function App() {
 		// pre-load every prompt sound before the game begins, so gameplay never waits
 		// on the network (cached in IndexedDB, which also works in Safari Lockdown)
 		setPreparing(true)
-		await ensureCached(DIGITS.map(n => `/sounds/${lang.code}/${n}.aac`))
+		await ensureCached(DIGITS.map(n => `/sound/lang/${lang.code}/${n}.aac`))
 		refreshCacheCount()
 		setPreparing(false)
 		const first = randomOf(DIGITS)

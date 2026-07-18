@@ -55,8 +55,9 @@ List order does not affect the on-screen order.
 ### Media files
 All that is needed to support a new language is 12 sound files in AAC format: one
 for the name of the language and eleven for the numbers from 0 to 10. Audio files
-live under `public/sounds/<lang>/<n>.aac` (for example `public/sounds/en/7.aac`
-for "seven" in English, and `public/sounds/en/en.aac` for the language name).
+live under `public/sound/lang/<lang>/<n>.aac` (for example
+`public/sound/lang/en/7.aac` for "seven" in English, and
+`public/sound/lang/en/en.aac` for the language name).
 #### What is needed
 - Creative Commons sound files to replace some of the current lower-quality ones
 - New sound files for a new language to be supported
@@ -70,7 +71,7 @@ To add a language:
    language's name in its own native script — and `numbers`) with the number
    words 0–10.
 2. Import it and add it to the `LANGUAGES` array in `src/App.tsx`.
-3. Drop the audio files at `public/sounds/<code>/`.
+3. Drop the audio files at `public/sound/lang/<code>/`.
 
 #### Setup environment
 - Node 20.19 or above

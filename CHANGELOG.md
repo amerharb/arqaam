@@ -14,6 +14,12 @@
   (it would reveal the answer)
 - Add a feature flag (`beta`) to hide unfinished languages from production
   builds while keeping them visible in development, like the sister projects
+### Changed
+- Move the sound files from `public/sounds/<lang>/` to
+  `public/sound/lang/<lang>/` (and the feedback sounds to `public/sound/fx/`),
+  the same layout as the sister projects. Already-cached sounds under the old
+  URLs are simply re-downloaded once; the old cache entries stay unused until
+  cleared with 🗑️
 ### Removed
 - Leftover Create React App / favicon-generator files: `public/about.txt`,
   `public/site.webmanifest` (duplicate of `manifest.json`), the empty
