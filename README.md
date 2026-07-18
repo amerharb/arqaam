@@ -32,14 +32,14 @@ again (▶ while it plays) to stop.
 - Flight mode (✈️): downloads all visible sounds into the browser's cache
   (IndexedDB) so they play offline; anything newly shown while it is on is
   downloaded right away. Turning it off keeps the cached files (🗑️ clears them).
-- Game (🎮 in the top bar): start a guessing game — a random number is spoken in
+- Game (🕹️ in the top bar): start a guessing game — a random number is spoken in
   the selected language and you tap the matching button (👍 correct, 👎 wrong).
   The numbers stay in order (they are not shuffled). A wrong number is
   temporarily disabled with a 👎 marker until you find the correct one. Stuck?
   The give-up button (🤷‍♂️) reveals it and plays a give-up sound (tracked
   separately from mistakes). It runs through all eleven numbers, with your progress (played,
   mistakes, give-ups, time) shown live above the board next to the give-up
-  button; the final result stays there when the game ends. Press 🎮 again to
+  button; the final result stays there when the game ends. Press 🕹️ again to
   stop early. Theme and flight mode stay changeable mid-game; the language is
   locked. Needs at least one language visible. Prompt sounds are pre-loaded so
   gameplay never waits on the network.

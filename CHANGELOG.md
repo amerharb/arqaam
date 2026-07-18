@@ -15,6 +15,7 @@
 - Add a feature flag (`beta`) to hide unfinished languages from production
   builds while keeping them visible in development, like the sister projects
 ### Changed
+- Change the game toggle emoji from 🎮 to 🕹️ (the classic joystick)
 - Unify the display line into one fixed-height segment (the spelled name, the
   live game stats and the final result all share it), so entering or leaving
   game mode never shifts the board; on narrow screens the stats row scales
