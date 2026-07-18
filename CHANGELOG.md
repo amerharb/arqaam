@@ -37,9 +37,13 @@
   [Week](https://github.com/amerharb/week)
 - Upgrade to React 19 and TypeScript 6 (and bump the other dependencies to match
   the sister projects); the version is bumped to 0.14.0 to align with them
+### Fixed
+- Number buttons no longer overflow their borders on narrow screens: the
+  button width and digit size now scale together with the viewport, instead
+  of a fixed 40px font inside a 7%-wide button
 ### Removed
-- The page title and its double-click download of all sound files; an
-  alternative (like the sister projects' flight mode) will come later
+- The page title and its double-click download of all sound files; the flight
+  mode toggle (✈️, above) is its replacement
 - The Create React App test setup (`react-scripts` test tooling and the
   `@testing-library/*` dev dependencies)
 

@@ -54,7 +54,6 @@ button {
 	text-align: center;
 	text-decoration: none;
 	margin: 10px;
-	width: 7%;
 	align-content: center;
 }
 
@@ -63,10 +62,17 @@ button:active {
 	transition: transform 0.1s;
 }
 
+/* number buttons scale with the viewport so the digit always fits inside;
+   width and font-size shrink together (clamp) instead of the old fixed
+   40px font in a 7%-wide button that overflowed on narrow screens */
 .button-number {
-	line-height: inherit;
+	line-height: 1;
 	color: #61dafb;
 	background-color: darkblue;
+	width: clamp(52px, 9vw, 92px);
+	font-size: clamp(22px, 4.5vw, 40px);
+	padding: 15px 0;
+	margin: clamp(4px, 1vw, 10px);
 }
 
 /* fixed top-right control bar: language dropdown, settings */
