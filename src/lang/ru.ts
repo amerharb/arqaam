@@ -2,8 +2,7 @@ import {Lang} from "./Lang";
 
 export const ru: Lang = {
 	code: 'ru',
-	display: 'Russian',
-	flag: '🇷🇺',
+	display: 'Русский',
 	numbers: [
 		'нуль',
 		'один',

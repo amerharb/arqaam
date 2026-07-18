@@ -2,8 +2,7 @@ import {Lang} from "./Lang";
 
 export const ar: Lang = {
     code: 'ar',
-    display: 'Arabic',
-    flag: '🇵🇸',
+    display: 'عربي',
     numbers: [
         'صفر',
         'واحد',

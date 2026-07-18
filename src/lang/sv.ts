@@ -2,8 +2,8 @@ import {Lang} from "./Lang";
 
 export const sv: Lang = {
 	code: 'sv',
-	display: 'Swedish',
-	flag: '🇸🇪', numbers: [
+	display: 'Svenska',
+	numbers: [
 		'noll',
 		'ett',
 		'två',

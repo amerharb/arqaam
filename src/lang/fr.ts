@@ -2,8 +2,7 @@ import {Lang} from "./Lang";
 
 export const fr: Lang = {
 	code: 'fr',
-	display: 'French',
-	flag: '🇫🇷',
+	display: 'Français',
 	numbers: [
 		'zéro',
 		'un',

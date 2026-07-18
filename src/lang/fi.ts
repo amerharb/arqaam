@@ -2,8 +2,7 @@ import {Lang} from "./Lang";
 
 export const fi: Lang = {
 	code: 'fi',
-	display: 'Finnish',
-	flag: '🇫🇮',
+	display: 'Suomi',
 	numbers: [
 		'nolla',
 		'yksi',
