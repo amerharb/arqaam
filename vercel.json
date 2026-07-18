@@ -1,0 +1,4 @@
+{
+  "framework": "vite",
+  "outputDirectory": "dist"
+}

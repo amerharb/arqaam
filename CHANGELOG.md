@@ -54,6 +54,9 @@
 - Number buttons no longer overflow their borders on narrow screens: the
   button width and digit size now scale together with the viewport, instead
   of a fixed 40px font inside a 7%-wide button
+- Vercel deploys again: a new `vercel.json` sets the framework to Vite and the
+  output directory to `dist` (the Vercel project was still configured for
+  Create React App's `build` folder)
 ### Removed
 - The page title and its double-click download of all sound files; the flight
   mode toggle (✈️, above) is its replacement
