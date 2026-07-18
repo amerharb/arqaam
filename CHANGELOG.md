@@ -2,6 +2,19 @@
 
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## [0.14.0] 2026-07-18
+### Changed
+- Migrate the build from Create React App (react-scripts) to Vite, and switch the
+  package manager from yarn to npm, to align with the sister projects
+  [Flags](https://github.com/amerharb/flags),
+  [Colors](https://github.com/amerharb/colors) and
+  [Week](https://github.com/amerharb/week)
+- Upgrade to React 19 and TypeScript 6 (and bump the other dependencies to match
+  the sister projects); the version is bumped to 0.14.0 to align with them
+### Removed
+- The Create React App test setup (`react-scripts` test tooling and the
+  `@testing-library/*` dev dependencies)
+
 ## [0.10.0] 2024-02-25
 ### Added
 - Add Spanish numbers
