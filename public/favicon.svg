@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+	<rect width="32" height="32" rx="6" fill="#391802"/>
+	<g fill="#F9B358" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" text-anchor="middle">
+		<text x="9.5" y="14.5">1</text>
+		<text x="22.5" y="14.5">2</text>
+		<text x="9.5" y="28">3</text>
+		<text x="22.5" y="28">4</text>
+	</g>
+</svg>

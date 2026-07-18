@@ -15,6 +15,11 @@
 - Add a feature flag (`beta`) to hide unfinished languages from production
   builds while keeping them visible in development, like the sister projects
 ### Changed
+- Replace the generated favicon set (ico + five pngs) with a single hand-drawn
+  `favicon.svg` (a 1-2-3-4 keypad tile in the old icon's colors), like the
+  sister projects Colors and Week; the manifest now uses the svg, matches the
+  app's dark background (#121212), and the home-screen short name is "Arqaam"
+  (was "1234")
 - Move the sound files from `public/sounds/<lang>/` to
   `public/sound/lang/<lang>/` (and the feedback sounds to `public/sound/fx/`),
   the same layout as the sister projects. Already-cached sounds under the old

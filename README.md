@@ -104,7 +104,6 @@ Vercel integration with GitHub.
 - Spanish: [https://ttsfree.com/text-to-speech/spanish-spain]()
 
 ### For graphics
-The favicon was generated with [favicon.io](https://favicon.io/) from the
-[Twitter Twemoji](https://github.com/twitter/twemoji) `1f522` (🔢) graphic,
-Copyright 2020 Twitter, Inc and other contributors, licensed under
-[CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+The favicon is an original SVG (a 1-2-3-4 keypad tile), inspired by the colors
+of the [Twitter Twemoji](https://github.com/twitter/twemoji) 🔢 graphic that
+served as the app's icon up to version 0.14.0.

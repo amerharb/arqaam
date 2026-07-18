@@ -1,20 +1,15 @@
 {
-  "short_name": "1234",
+  "short_name": "Arqaam",
   "name": "Arqaam",
   "start_url": "/index.html",
-  "background_color": "#391802",
+  "background_color": "#121212",
   "display": "standalone",
-  "theme_color": "#F9B358",
+  "theme_color": "#121212",
   "icons": [
     {
-      "src": "/android-chrome-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/android-chrome-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
     }
   ]
 }
