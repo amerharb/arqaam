@@ -8,10 +8,14 @@ export type Theme = 'system' | 'light' | 'dark'
 
 export type Settings = {
 	theme: Theme,
+	// language codes the user chose to hide from the main screen; empty = show
+	// everything, so newly added languages are visible by default
+	hiddenLanguages: string[],
 }
 
 export const DEFAULT_SETTINGS: Settings = {
 	theme: 'system',
+	hiddenLanguages: [],
 }
 
 const STORAGE_KEY = 'arqaam:settings'

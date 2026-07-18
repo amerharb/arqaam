@@ -9,10 +9,12 @@ const THEME_OPTIONS: { value: Theme, icon: string, name: string }[] = [
 
 type Props = {
 	settings: Settings,
+	// the full language list, so the checklist always shows everything supported
+	languages: { code: string, display: string }[],
 	onChange: (settings: Settings) => void,
 }
 
-export default function SettingsPanel({ settings, onChange }: Readonly<Props>) {
+export default function SettingsPanel({ settings, languages, onChange }: Readonly<Props>) {
 	const [open, setOpen] = useState(false)
 	const containerRef = useRef<HTMLDivElement | null>(null)
 
@@ -29,6 +31,16 @@ export default function SettingsPanel({ settings, onChange }: Readonly<Props>) {
 	}, [open])
 
 	const setTheme = (theme: Theme) => onChange({ ...settings, theme })
+
+	const toggleLanguage = (code: string) => {
+		const hiddenLanguages = settings.hiddenLanguages.includes(code)
+			? settings.hiddenLanguages.filter(c => c !== code)
+			: [...settings.hiddenLanguages, code]
+		onChange({ ...settings, hiddenLanguages })
+	}
+
+	const showAllLanguages = () => onChange({ ...settings, hiddenLanguages: [] })
+	const hideAllLanguages = () => onChange({ ...settings, hiddenLanguages: languages.map(l => l.code) })
 
 	return (
 		<div className="settings" ref={containerRef}>
@@ -60,6 +72,42 @@ export default function SettingsPanel({ settings, onChange }: Readonly<Props>) {
 									{opt.icon}
 								</button>
 							))}
+						</div>
+					</div>
+
+					<div className="settings-row">
+						<div className="settings-select-all">
+							<button
+								type="button"
+								aria-label="Select all languages"
+								title="Select all"
+								onClick={showAllLanguages}
+							>
+								✅
+							</button>
+							<button
+								type="button"
+								aria-label="Deselect all languages"
+								title="Deselect all"
+								onClick={hideAllLanguages}
+							>
+								⬜
+							</button>
+						</div>
+						<div className="settings-checklist" role="group" aria-label="Languages">
+							{languages.map(l => {
+								const shown = !settings.hiddenLanguages.includes(l.code)
+								return (
+									<label key={`setting-lang-${l.code}`} className="settings-check">
+										<input
+											type="checkbox"
+											checked={shown}
+											onChange={() => toggleLanguage(l.code)}
+										/>
+										{l.display}
+									</label>
+								)
+							})}
 						</div>
 					</div>
 				</div>

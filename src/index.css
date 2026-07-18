@@ -69,21 +69,7 @@ button:active {
 	background-color: darkblue;
 }
 
-.down {
-	background-color: #4CAF50;
-	color: white;
-	border: none;
-	cursor: default;
-}
-
-.up {
-	background-color: gray;
-	color: white;
-	border: none;
-	cursor: pointer;
-}
-
-/* fixed top-right control bar: settings */
+/* fixed top-right control bar: language dropdown, settings */
 .top-controls {
 	position: fixed;
 	top: 10px;
@@ -92,6 +78,17 @@ button:active {
 	display: flex;
 	align-items: flex-start;
 	gap: 8px;
+}
+
+.language-select {
+	padding: 6px 10px;
+	border-radius: 6px;
+	border: 1px solid var(--border);
+	font-family: inherit;
+	font-size: 16px;
+	cursor: pointer;
+	background-color: var(--button-bg);
+	color: var(--button-fg);
 }
 
 /* Settings: a gear button that opens a small panel below it */
@@ -141,6 +138,59 @@ button:active {
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
+	margin-bottom: 16px;
+}
+
+.settings-row:last-child {
+	margin-bottom: 0;
+}
+
+/* small select-all / deselect-all buttons above the language list */
+.settings-select-all {
+	display: flex;
+	gap: 6px;
+}
+
+.settings-select-all button {
+	width: auto;
+	font-size: 12px;
+	line-height: 1;
+	padding: 4px 8px;
+	margin: 0;
+	border: 1px solid var(--border);
+	border-radius: 5px;
+	background-color: var(--button-bg);
+	color: var(--button-fg);
+}
+
+.settings-select-all button:hover {
+	background-color: var(--surface-hover);
+}
+
+.settings-checklist {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	max-height: 180px;
+	overflow-y: auto;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	padding: 6px 8px;
+}
+
+.settings-check {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 14px;
+	padding: 3px 0;
+	cursor: pointer;
+	user-select: none;
+}
+
+.settings-check input {
+	margin: 0;
+	cursor: pointer;
 }
 
 .settings-segmented {

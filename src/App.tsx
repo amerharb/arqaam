@@ -16,17 +16,34 @@ import { tr } from './lang/tr'
 import { es } from './lang/es'
 
 function App() {
-	const LANGUAGES: Lang[] = [ar, en, de, sv, fr, tr, fa, ru, fi, es]
+	// everything the build supports
+	const ALL_LANGUAGES: Lang[] = [ar, en, de, sv, fr, tr, fa, ru, fi, es]
 	const DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-	const [lang, setSelectedLanguage] = useState(LANGUAGES[0])
+	// code of the selected language (the spoken and spelled number words)
+	const [selectedCode, setSelectedCode] = useState(ALL_LANGUAGES[0].code)
 	const [spelledNumber, setSpelledNumber] = useState('')
 
-	// user settings (theme only for now)
+	// user settings (theme + which languages to show)
 	const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS)
 	useEffect(() => {
-		const loaded = loadSettings()
+		let loaded = loadSettings()
+
+		// URL param for a shareable/deep-linked view:
+		//   ?l=en,ar   -> only these languages are visible; the first is selected
+		// Order in the param does not affect the on-screen order.
+		const params = new URLSearchParams(window.location.search)
+		const lParam = params.get('l')
+		if (lParam !== null) {
+			const valid = new Set(ALL_LANGUAGES.map(l => l.code))
+			const want = lParam.split(',').map(s => s.trim()).filter(c => valid.has(c))
+			const hiddenLanguages = ALL_LANGUAGES.map(l => l.code).filter(c => !want.includes(c))
+			loaded = { ...loaded, hiddenLanguages }
+			if (want.length > 0) setSelectedCode(want[0]) // first listed = selected
+		}
+
 		setSettings(loaded)
 		applyTheme(loaded.theme)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	const updateSettings = (next: Settings) => {
@@ -35,9 +52,22 @@ function App() {
 		applyTheme(next.theme)
 	}
 
-	const handleLanguageChange = async (lang: Lang) => {
-		await playSound(lang.code)
-		setSelectedLanguage(lang)
+	const LANGUAGES = ALL_LANGUAGES.filter(l => !settings.hiddenLanguages.includes(l.code))
+	// the selected language object; undefined when every language is hidden
+	const lang = LANGUAGES.find(l => l.code === selectedCode)
+
+	// if the selected language gets hidden in settings, fall back to the first visible one
+	useEffect(() => {
+		if (LANGUAGES.length > 0 && !LANGUAGES.some(l => l.code === selectedCode)) {
+			setSelectedCode(LANGUAGES[0].code)
+			setSpelledNumber('')
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [settings.hiddenLanguages])
+
+	const handleLanguageChange = async (code: string) => {
+		await playSound(code)
+		setSelectedCode(code)
 		setSpelledNumber('')
 	}
 
@@ -98,31 +128,36 @@ function App() {
 	return (
 		<div className="Arqaam">
 			<div className="top-controls">
+				<select
+					className="language-select"
+					title="Language of the numbers"
+					value={lang ? lang.code : ''}
+					onChange={(e) => handleLanguageChange(e.target.value)}
+				>
+					{LANGUAGES.map(l => (
+						<option key={`lang-${l.code}`} value={l.code}>{l.display}</option>
+					))}
+				</select>
 				<SettingsPanel
 					settings={settings}
+					languages={ALL_LANGUAGES}
 					onChange={updateSettings}
 				/>
 			</div>
-			<hgroup>
-				{LANGUAGES.map((l) => (
-					<button
-						key={`lang-${l.code}`}
-						className={l.code === lang.code ? 'down' : 'up'}
-						onClick={() => handleLanguageChange(l)}
-					>
-						{l.flag}
-					</button>
-				))}
-			</hgroup>
 			<hgroup>
 				{DIGITS.map(n => (
 					<button
 						key={`number-${n}`}
 						className="button-number"
-						title={lang.numbers ? lang.numbers[n] : ''}
+						title={lang ? lang.numbers[n] : '🤷‍♂️'}
 						onClick={() => {
+							if (!lang) {
+								// every language is hidden: nothing to say
+								setSpelledNumber('🤷‍♂️')
+								return
+							}
 							playSound(lang.code, n)
-							setSpelledNumber(lang.numbers ? lang.numbers[n] : '')
+							setSpelledNumber(lang.numbers[n])
 						}}
 					>
 						{n}

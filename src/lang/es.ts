@@ -1,10 +1,8 @@
 import {Lang} from "./Lang";
-// {code: 'es', display: 'Spanish', flag: ''},
 
 export const es: Lang = {
     code: 'es',
-    display: 'Spanish',
-    flag: '🇪🇸',
+    display: 'Español',
     numbers: [
 			'cero',
 			'uno',

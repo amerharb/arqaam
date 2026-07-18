@@ -2,8 +2,7 @@ import { Lang } from "./Lang";
 
 export const fa: Lang = {
 	code: 'fa',
-	display: 'Persian',
-	flag: '🇮🇷',
+	display: 'فارسی',
 	numbers: [
 		'صفر',
 		'یکی',

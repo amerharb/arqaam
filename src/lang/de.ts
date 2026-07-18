@@ -2,8 +2,8 @@ import {Lang} from "./Lang";
 
 export const de: Lang = {
 	code: 'de',
-	display: 'German',
-	flag: '🇩🇪', numbers: [
+	display: 'Deutsch',
+	numbers: [
 		'null',
 		'eins',
 		'zwei',

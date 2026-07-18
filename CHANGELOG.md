@@ -7,7 +7,18 @@
 - Add a settings panel (⚙️ top right) like the sister projects, with a Theme
   option (system / light / dark icons, system is the default); the choice is
   saved in localStorage and applied before first paint to avoid a flash
+- Add a language show/hide checklist to the settings panel (with ✅/⬜
+  select-all/deselect-all buttons), like the sister projects; hiding the
+  selected language falls back to the first visible one, and with every
+  language hidden a number click shows 🤷‍♂️ instead of playing a sound
+- Support a URL parameter for a shareable view: `l` sets which languages are
+  shown with the first one selected (e.g. `?l=en,ar`), like the sister projects
 ### Changed
+- Replace the row of flag buttons with a language dropdown in the top bar,
+  like the sister projects
+- Show each language under its native name (عربي, Deutsch, Svenska, Français,
+  Türkçe, فارسی, Русский, Suomi, Español) instead of flag emojis and English
+  names, like the sister projects
 - Migrate the build from Create React App (react-scripts) to Vite, and switch the
   package manager from yarn to npm, to align with the sister projects
   [Flags](https://github.com/amerharb/flags),
