@@ -12,6 +12,8 @@
 	--surface-hover: light-dark(#ececec, #2c2c2c);
 	--button-bg: light-dark(#f0f0f0, #2a2a2a);
 	--button-fg: light-dark(#1a1a1a, #e6e6e6);
+	/* background for pressed/selected controls (toggles, segments, open gear) */
+	--active-bg: light-dark(lightsteelblue, #3a4d6b);
 }
 
 :root[data-theme='light'] {
@@ -76,6 +78,22 @@ button:active {
 	margin: clamp(4px, 1vw, 10px);
 }
 
+/* keep the button looking pressed while its sound is playing */
+.button-number.playing {
+	transform: scale(0.95);
+	box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45);
+}
+
+/* small play indicator shown in the corner of the playing number */
+.play-icon {
+	position: absolute;
+	top: 3px;
+	left: 5px;
+	font-size: 14px;
+	line-height: 1;
+	color: #61dafb;
+}
+
 /* a solved or given-up number is disabled and dimmed during the game */
 .button-number:disabled {
 	opacity: 0.35;
@@ -98,8 +116,9 @@ button:active {
 	text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
 }
 
-/* game-mode toggle, sits in the top control bar */
-.game-toggle {
+/* game-mode toggle and mute toggle, in the toolbar */
+.game-toggle,
+.mute-toggle {
 	width: auto;
 	font-size: 20px;
 	line-height: 1;
@@ -111,14 +130,16 @@ button:active {
 	color: var(--button-fg);
 }
 
-.game-toggle:hover {
+.game-toggle:hover,
+.mute-toggle:hover {
 	background-color: var(--surface-hover);
 }
 
-.game-toggle.on {
+.game-toggle.on,
+.mute-toggle.on {
 	transform: scale(0.95);
 	box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35);
-	background-color: var(--surface-hover);
+	background-color: var(--active-bg);
 }
 
 .game-toggle:disabled {
@@ -131,24 +152,6 @@ button:active {
 	.game-toggle.busy {
 		animation: flight-mode-pulse 1s ease-in-out infinite;
 	}
-}
-
-/* give-up button, shown centered below the score during a game */
-.game-giveup {
-	display: block;
-	width: auto;
-	margin: 4px auto 0;
-	font-size: 32px;
-	line-height: 1;
-	padding: 10px 20px;
-	border: 1px solid var(--border);
-	border-radius: 12px;
-	background-color: var(--button-bg);
-	color: var(--button-fg);
-}
-
-.game-giveup:hover {
-	background-color: var(--surface-hover);
 }
 
 /* thumbs up/down that flashes once over the board after a guess */
@@ -176,27 +179,138 @@ button:active {
 	100% { opacity: 0; transform: scale(1.1); }
 }
 
-/* end-of-game result: score, mistakes, give-ups, time */
-.game-result {
-	display: flex;
-	gap: 20px;
-	justify-content: center;
-	align-items: center;
-	font-size: 1.5rem;
-	font-weight: bold;
-	font-variant-numeric: tabular-nums;
-	flex-wrap: wrap;
-}
-
-/* fixed top-right control bar: language dropdown, settings */
-.top-controls {
-	position: fixed;
-	top: 10px;
-	right: 10px;
+/*
+ * The app bar: one sticky header with four segments laid out right-to-left —
+ * 1 toolbar (🕹️, language, ⚙️), 2 display (the spelled name), 3 game score and
+ * 4 game actions (3 and 4 only exist in game mode). DOM order is 1,2,3,4;
+ * row-reverse puts the toolbar at the right edge. On narrow screens the bar
+ * stacks the segments top-to-bottom in the same 1→4 order.
+ */
+.app-bar {
+	position: sticky;
+	top: 0;
 	z-index: 1000;
 	display: flex;
-	align-items: flex-start;
+	flex-direction: row-reverse;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 12px;
+	min-height: 56px;
+	padding: 8px 12px;
+	background-color: var(--bg);
+	border-bottom: 1px solid var(--border);
+}
+
+@media (max-width: 760px) {
+	.app-bar {
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
+	}
+
+	/* stacked: the display takes the full row */
+	.display {
+		flex: none;
+		width: 100%;
+		min-width: 0;
+	}
+}
+
+/* segment 1: the controls */
+.toolbar {
+	flex: none;
+	display: flex;
+	align-items: center;
 	gap: 8px;
+}
+
+/* segment 2: fills the space between the game segments (anchored left) and
+   the toolbar (anchored right) — with the game segments hidden it gets most
+   of the bar. A long name first shrinks its font (down to a limit, see the
+   fit effect in App.tsx) and only then auto-scrolls (pure CSS marquee via
+   container units — no movement when the text fits) */
+.display {
+	flex: 1 1 0;
+	min-width: 140px;
+	overflow: hidden;
+	container-type: inline-size;
+	display: flex;
+	justify-content: safe center;
+	align-items: center;
+}
+
+.display-text {
+	margin: 0;
+	white-space: nowrap;
+	animation: display-overflow-scroll 6s ease-in-out infinite alternate;
+}
+
+@keyframes display-overflow-scroll {
+	from { transform: translateX(0); }
+	to { transform: translateX(min(0px, calc(100cqw - 100%))); }
+}
+
+/* segment 3: live game stats (frozen once the round ends) */
+.game-score {
+	flex: none;
+	display: flex;
+	align-items: center;
+	gap: clamp(6px, 1.5vw, 16px);
+	font-size: clamp(0.95rem, 3vw, 1.25rem);
+	font-weight: bold;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+/* segment 4: round actions (🤷‍♂️ give up, ✋ stop, 🔄 restart) */
+.game-actions {
+	flex: none;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.game-actions button {
+	width: auto;
+	font-size: 20px;
+	line-height: 1;
+	padding: 8px 12px;
+	margin: 0;
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	background-color: var(--button-bg);
+	color: var(--button-fg);
+}
+
+.game-actions button:hover {
+	background-color: var(--surface-hover);
+}
+
+.game-actions button:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+/* smooth unfold when the game segments appear (modern CSS entry transition;
+   browsers without @starting-style / interpolate-size just show them instantly) */
+:root {
+	interpolate-size: allow-keywords;
+}
+
+.game-score,
+.game-actions {
+	height: auto;
+	overflow: hidden;
+	transition: opacity 0.3s ease, transform 0.3s ease, height 0.3s ease;
+}
+
+@starting-style {
+	.game-score,
+	.game-actions {
+		opacity: 0;
+		transform: translateY(-8px);
+		height: 0;
+	}
 }
 
 .language-select {
@@ -234,7 +348,7 @@ button:active {
 .settings-button.open {
 	transform: scale(0.95);
 	box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35);
-	background-color: var(--surface-hover);
+	background-color: var(--active-bg);
 }
 
 .settings-panel {
@@ -378,7 +492,7 @@ button:active {
 .settings-flight-mode.on {
 	transform: scale(0.95);
 	box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35);
-	background-color: var(--surface-hover);
+	background-color: var(--active-bg);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -441,7 +555,7 @@ button:active {
 }
 
 .settings-segmented .segment.selected {
-	background-color: var(--surface-hover);
+	background-color: var(--active-bg);
 	border-color: var(--fg);
 	font-weight: 700;
 }

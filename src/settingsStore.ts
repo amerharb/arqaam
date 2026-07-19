@@ -24,6 +24,31 @@ export const DEFAULT_SETTINGS: Settings = {
 
 const STORAGE_KEY = 'arqaam:settings'
 
+// all supported languages that a browser locale can match
+const SPOKEN_LANGUAGES = ['ar', 'en', 'de', 'sv', 'fr', 'tr', 'fa', 'ru', 'fi', 'es']
+
+// map a BCP-47 tag (e.g. "en-US", "sv") to one of our language codes, or null
+function tagToLanguage(tag: string): string | null {
+	const primary = tag.toLowerCase().split('-')[0]
+	return SPOKEN_LANGUAGES.includes(primary) ? primary : null
+}
+
+// the browser's preferred language, mapped to a supported code (falls back to English)
+export function preferredLanguage(): string {
+	const tag = (typeof navigator !== 'undefined' && navigator.language) || ''
+	return tagToLanguage(tag) ?? 'en'
+}
+
+// first-run settings: show only the browser's languages (navigator.languages) plus
+// the preferred one; everything else starts hidden
+function firstRunSettings(): Settings {
+	const tags = (typeof navigator !== 'undefined' && navigator.languages) || []
+	const visible = new Set<string>(tags.map(tagToLanguage).filter(Boolean) as string[])
+	visible.add(preferredLanguage())
+	const hiddenLanguages = SPOKEN_LANGUAGES.filter(code => !visible.has(code))
+	return { ...DEFAULT_SETTINGS, hiddenLanguages }
+}
+
 export function loadSettings(): Settings {
 	try {
 		const raw = localStorage.getItem(STORAGE_KEY)
@@ -33,7 +58,8 @@ export function loadSettings(): Settings {
 	} catch {
 		// localStorage may be unavailable (e.g. private mode); fall back to defaults
 	}
-	return DEFAULT_SETTINGS
+	// no saved settings: derive first-run visibility from the browser's languages
+	return firstRunSettings()
 }
 
 export function saveSettings(settings: Settings): void {

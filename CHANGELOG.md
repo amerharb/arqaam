@@ -2,6 +2,66 @@
 
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## [0.15.0] 2026-07-18
+### Fixed
+- Pressed and selected controls are now clearly visible in dark mode: a new
+  shared `--active-bg` accent (the steel blue Flags already used) backs the
+  game and mute toggles, the open settings gear, selected segments and the
+  flight-mode toggle. They previously used `--surface-hover`, which in dark
+  mode is nearly identical to the normal button background
+### Added
+- Add a mute toggle (🔊/🔇) in the toolbar, right of the game button: while
+  muted nothing plays — names, game prompts or feedback sounds — and whatever
+  is playing at that moment stops
+- During a round, the prompted number's name is written in the display
+  segment (muted or not), so the game can also be played by reading
+- Add a replay button (👂) to the game actions: plays the current prompt
+  again; disabled while muted or between rounds
+- On first visit, pick the starting language from the browser
+  (navigator.language) and show only the browser's languages
+  (navigator.languages), like the sister projects; everything else starts
+  hidden (all languages can still be enabled in settings)
+- Show a play icon (▶) on the number button while its sound is playing, keep
+  the button pressed down, and stop the sound when the playing number is
+  clicked again, like the sister projects. Game prompts don't show the icon
+  (it would reveal the answer)
+- Add a feature flag (`beta`) to hide unfinished languages from production
+  builds while keeping them visible in development, like the sister projects
+### Changed
+- Change the game toggle emoji from 🎮 to 🕹️ (the classic joystick)
+- Restructure the top of the app into one sticky app bar with four segments,
+  right-to-left: toolbar (🕹️ game, 🔊 mute, language, ⚙️ settings), display
+  (the spoken name), live game score (🏁 played 👎 mistakes 🤷‍♂️ give-ups
+  ⏱️ time, ticking every second) and game actions. The game segments anchor
+  to the left, the toolbar to the right, and the display stretches between
+  them — a long name first shrinks its font (down to a limit) and only then
+  auto-scrolls back and forth. The game segments only appear in game mode,
+  unfolding with a smooth transition; on narrow screens the bar stacks the
+  segments top-to-bottom in the same order, with the display on a full row
+- The game no longer ends by itself: when every number has been played the
+  round is over — the clock freezes and the score stays — but game mode
+  stays on. New round actions sit next to the give-up button (🤷‍♂️): stop
+  (✋) ends the current round early and restart (🔄) starts a fresh one;
+  clicking 🕹️ again leaves game mode and hides the game score and actions
+- In the game result, show the mistakes count with 👎 instead of ❌, matching
+  the marker shown on a wrong guess
+- Replace the generated favicon set (ico + five pngs) with a single hand-drawn
+  `favicon.svg` (a 1-2-3-4 keypad tile in the old icon's colors), like the
+  sister projects Colors and Week; the manifest now uses the svg, matches the
+  app's dark background (#121212), and the home-screen short name is "Arqaam"
+  (was "1234")
+- Move the sound files from `public/sounds/<lang>/` to
+  `public/sound/lang/<lang>/` (and the feedback sounds to `public/sound/fx/`),
+  the same layout as the sister projects. Already-cached sounds under the old
+  URLs are simply re-downloaded once; the old cache entries stay unused until
+  cleared with 🗑️
+### Removed
+- Leftover Create React App / favicon-generator files: `public/about.txt`,
+  `public/site.webmanifest` (duplicate of `manifest.json`), the empty
+  `public/favicon_io` folder, and the outdated `img.png` screenshot in the
+  README (the favicon's Twemoji CC-BY 4.0 attribution moved to the README
+  Credits section)
+
 ## [0.14.0] 2026-07-18
 ### Added
 - Add a settings panel (⚙️ top right) like the sister projects, with a Theme
