@@ -30,12 +30,14 @@
 ### Changed
 - Change the game toggle emoji from 🎮 to 🕹️ (the classic joystick)
 - Restructure the top of the app into one sticky app bar with four segments,
-  right-to-left: toolbar (🕹️ game, language, ⚙️ settings), display (the spoken
-  name, fixed width — names wider than it auto-scroll back and forth), live
-  game score (🏁 played 👎 mistakes 🤷‍♂️ give-ups ⏱️ time, ticking every
-  second) and game actions. The last two only appear in game mode, unfolding
-  with a smooth transition; on narrow screens the bar stacks the segments
-  top-to-bottom in the same order
+  right-to-left: toolbar (🕹️ game, 🔊 mute, language, ⚙️ settings), display
+  (the spoken name), live game score (🏁 played 👎 mistakes 🤷‍♂️ give-ups
+  ⏱️ time, ticking every second) and game actions. The game segments anchor
+  to the left, the toolbar to the right, and the display stretches between
+  them — a long name first shrinks its font (down to a limit) and only then
+  auto-scrolls back and forth. The game segments only appear in game mode,
+  unfolding with a smooth transition; on narrow screens the bar stacks the
+  segments top-to-bottom in the same order, with the display on a full row
 - The game no longer ends by itself: when every number has been played the
   round is over — the clock freezes and the score stays — but game mode
   stays on. New round actions sit next to the give-up button (🤷‍♂️): stop

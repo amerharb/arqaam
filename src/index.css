@@ -207,21 +207,31 @@ button:active {
 		align-items: center;
 		gap: 8px;
 	}
+
+	/* stacked: the display takes the full row */
+	.display {
+		flex: none;
+		width: 100%;
+		min-width: 0;
+	}
 }
 
 /* segment 1: the controls */
 .toolbar {
+	flex: none;
 	display: flex;
 	align-items: center;
 	gap: 8px;
 }
 
-/* segment 2: fixed width so the bar never jitters as names change; text wider
-   than the box auto-scrolls back and forth (pure CSS marquee via container
-   units — no movement at all when the text fits) */
+/* segment 2: fills the space between the game segments (anchored left) and
+   the toolbar (anchored right) — with the game segments hidden it gets most
+   of the bar. A long name first shrinks its font (down to a limit, see the
+   fit effect in App.tsx) and only then auto-scrolls (pure CSS marquee via
+   container units — no movement when the text fits) */
 .display {
-	width: 220px;
-	flex: none;
+	flex: 1 1 0;
+	min-width: 140px;
 	overflow: hidden;
 	container-type: inline-size;
 	display: flex;
@@ -242,6 +252,7 @@ button:active {
 
 /* segment 3: live game stats (frozen once the round ends) */
 .game-score {
+	flex: none;
 	display: flex;
 	align-items: center;
 	gap: clamp(6px, 1.5vw, 16px);
@@ -253,6 +264,7 @@ button:active {
 
 /* segment 4: round actions (🤷‍♂️ give up, ✋ stop, 🔄 restart) */
 .game-actions {
+	flex: none;
 	display: flex;
 	align-items: center;
 	gap: 6px;
