@@ -4,6 +4,13 @@
 
 ## [0.15.0] 2026-07-18
 ### Added
+- Add a mute toggle (🔊/🔇) in the toolbar, right of the game button: while
+  muted nothing plays — names, game prompts or feedback sounds — and whatever
+  is playing at that moment stops
+- During a round, the prompted number's name is written in the display
+  segment (muted or not), so the game can also be played by reading
+- Add a replay button (👂) to the game actions: plays the current prompt
+  again; disabled while muted or between rounds
 - On first visit, pick the starting language from the browser
   (navigator.language) and show only the browser's languages
   (navigator.languages), like the sister projects; everything else starts

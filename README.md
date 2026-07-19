@@ -24,6 +24,8 @@ Pick a language from the dropdown in the top right, then click a number (0–10)
 to hear it pronounced and see it spelled out in that language. Click the number
 again (▶ while it plays) to stop.
 
+- Mute (🔊/🔇, right of 🕹️): silences everything — names, game prompts and
+  feedback sounds — until clicked again.
 - Settings (⚙️ top right): theme (system / light / dark, system is the default),
   a language checklist to show/hide languages (with ✅/⬜
   select-all/deselect-all buttons), a flight mode toggle (✈️), and cache info
@@ -39,7 +41,8 @@ again (▶ while it plays) to stop.
   The give-up button (🤷‍♂️) reveals it and plays a give-up sound (tracked
   separately from mistakes). It runs through all eleven numbers, with your progress (played,
   mistakes, give-ups, time) shown live in the app bar next to the round
-  buttons. When every number has been played the round is over — the clock
+  buttons. The prompted name is also written in the display segment (even
+  while muted), and the 👂 button plays it again. When every number has been played the round is over — the clock
   freezes and the score stays — but game mode stays on: ✋ stops a round
   early, 🔄 starts a fresh one, and pressing 🕹️ again leaves game mode. Theme and flight mode stay changeable mid-game; the language is
   locked. Needs at least one language visible. Prompt sounds are pre-loaded so

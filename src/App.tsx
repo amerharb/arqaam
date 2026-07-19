@@ -43,6 +43,12 @@ function App() {
 	// how many sound files are currently in the cache, shown in settings
 	const [cachedCount, setCachedCount] = useState(0)
 
+	// 🔇: when muted, nothing plays (prompts, names, or feedback sounds).
+	// A ref mirrors the state so the audio helpers and pending prompt timers
+	// always see the current value.
+	const [muted, setMuted] = useState(false)
+	const mutedRef = useRef(false)
+
 	// the sound currently playing, so starting a new one can stop it first
 	const playingAudio = useRef<HTMLAudioElement | null>(null)
 	// pending "play the next prompt" timer during the game, so it can be cancelled
@@ -62,6 +68,14 @@ function App() {
 		}
 		setPlayingNumber(null)
 	}, [])
+
+	// mute toggle (🔊/🔇): muting also silences whatever is playing right now
+	const toggleMute = () => {
+		const next = !muted
+		mutedRef.current = next
+		if (next) stopSound()
+		setMuted(next)
+	}
 
 	const refreshCacheCount = useCallback(async () => {
 		try {
@@ -166,6 +180,7 @@ function App() {
 	// the network, storing it for next time. Starting a new sound stops the one
 	// currently playing. Number sounds show the play icon on their button.
 	const playSound = useCallback(async (langCode: string, n?: number) => {
+		if (mutedRef.current) return
 		try {
 			const audioUrl = `/sound/lang/${langCode}/${n ?? langCode}.aac`
 			const blob = await getAudioBlob(audioUrl)
@@ -192,6 +207,7 @@ function App() {
 	// play a number sound without touching the play-icon UI (used by the game,
 	// where a ▶ on the target button would reveal the answer)
 	const playFile = useCallback(async (langCode: string, n: number) => {
+		if (mutedRef.current) return
 		try {
 			const blob = await getAudioBlob(`/sound/lang/${langCode}/${n}.aac`)
 			if (!blob) return
@@ -294,6 +310,12 @@ function App() {
 		setEndedAt(Date.now())
 	}
 
+	// 👂: play the current prompt again
+	const replaySound = () => {
+		if (target === null || !lang) return
+		playFile(lang.code, target)
+	}
+
 	// mark the target number played and move on (or finish the round)
 	const advance = (n: number) => {
 		// cancel any not-yet-fired next-prompt timer (e.g. the player answered the
@@ -326,24 +348,30 @@ function App() {
 	const guessNumber = (n: number) => {
 		if (target === null || solved.includes(n) || wrongGuesses.includes(n)) return
 		if (n === target) {
-			playFx('correct')
+			if (!mutedRef.current) playFx('correct')
 			flashFeedback('👍')
 			advance(n)
 		} else {
 			// temporarily disable this wrong number (with a 👎 marker) until the round is won
 			setWrongGuesses(w => (w.includes(n) ? w : [...w, n]))
 			setMistakes(m => m + 1)
-			playFx('wrong')
+			if (!mutedRef.current) playFx('wrong')
 			flashFeedback('👎')
 		}
 	}
+
+	// what the display segment shows: the prompted number's name during a round
+	// (so the game is playable while muted), otherwise the last clicked name
+	const displayText = gameOn && target !== null && lang
+		? lang.numbers[target]
+		: spelledNumber
 
 	// give up on the current number: counts as played and as a give-up (not a mistake)
 	const giveUp = () => {
 		if (target === null) return
 		setGiveUps(g => g + 1)
 		setGaveUpNumbers(g => (g.includes(target) ? g : [...g, target]))
-		playFx('giveup')
+		if (!mutedRef.current) playFx('giveup')
 		flashFeedback('🤷‍♂️')
 		advance(target)
 	}
@@ -368,6 +396,15 @@ function App() {
 					>
 						🕹️
 					</button>
+					<button
+						className={muted ? 'mute-toggle on' : 'mute-toggle'}
+						aria-label={muted ? 'Unmute' : 'Mute'}
+						aria-pressed={muted}
+						title={muted ? 'Unmute sounds' : 'Mute all sounds'}
+						onClick={toggleMute}
+					>
+						{muted ? '🔇' : '🔊'}
+					</button>
 					<select
 						className="language-select"
 						title="Language of the numbers"
@@ -391,7 +428,7 @@ function App() {
 				</div>
 				<div className="display">
 					<h1 className="display-text">
-						{preparing ? '⏳' : spelledNumber}
+						{preparing ? '⏳' : displayText}
 					</h1>
 				</div>
 				{gameOn && (
@@ -404,6 +441,14 @@ function App() {
 				)}
 				{gameOn && (
 					<div className="game-actions">
+						<button
+							aria-label="Replay the sound"
+							title="Play the prompt again"
+							disabled={muted || target === null}
+							onClick={replaySound}
+						>
+							👂
+						</button>
 						<button
 							aria-label="Give up"
 							title="Give up: reveal this one and move on"
