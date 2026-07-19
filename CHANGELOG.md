@@ -3,6 +3,12 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
 ## [0.15.0] 2026-07-18
+### Fixed
+- Pressed and selected controls are now clearly visible in dark mode: a new
+  shared `--active-bg` accent (the steel blue Flags already used) backs the
+  game and mute toggles, the open settings gear, selected segments and the
+  flight-mode toggle. They previously used `--surface-hover`, which in dark
+  mode is nearly identical to the normal button background
 ### Added
 - Add a mute toggle (🔊/🔇) in the toolbar, right of the game button: while
   muted nothing plays — names, game prompts or feedback sounds — and whatever
