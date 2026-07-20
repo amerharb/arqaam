@@ -2,13 +2,16 @@
 
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
-## [0.15.0] 2026-07-20
+## [0.16.0] 2026-07-20
 ### Changed
 - Internal refactor (no behaviour change): App.tsx is split into focused
   modules shared verbatim with the sister projects — `useAudio` (playback,
   mute, feedback sounds), `useGame` (the round state machine), `GameHud` (the
   score and action segments) and `useFitText` (the display shrink-to-fit) —
   cutting App.tsx from ~545 to ~290 lines
+
+## [0.15.0] 2026-07-20
+### Changed
 
 ## [0.15.0] 2026-07-18
 ### Fixed
