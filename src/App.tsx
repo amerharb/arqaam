@@ -198,7 +198,7 @@ function App() {
 						className="language-select"
 						title="Language of the numbers"
 						value={lang ? lang.code : ''}
-						disabled={game.gameOn}
+						disabled={game.target !== null}
 						onChange={(e) => handleLanguageChange(e.target.value)}
 					>
 						{LANGUAGES.map(l => (
