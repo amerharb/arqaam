@@ -3,6 +3,11 @@
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
 ## [0.16.0] 2026-07-20
+### Added
+- Localize the interface: all UI text (button tooltips, the "select a language
+  to play" hint, settings labels, game score/actions) now lives in
+  `src/i18n/*.json` and follows the selected language (English, Arabic, German,
+  Swedish translated; others fall back to English)
 ### Changed
 - In game mode with the round stopped (finished or ✋), the selected language
   can be changed again — the next 🔄 round uses it. It stays locked while a

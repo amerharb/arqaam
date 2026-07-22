@@ -9,6 +9,7 @@ import { ensureCached, idbCount, idbClear } from './audioCache'
 import { useAudio } from './useAudio'
 import { useGame } from './useGame'
 import { useFitText } from './useFitText'
+import { translator } from './i18n'
 import { Lang } from './lang/Lang'
 import { ar } from './lang/ar'
 import { de } from './lang/de'
@@ -162,6 +163,9 @@ function App() {
 		? lang.numbers[Number(game.target)]
 		: spelledNumber
 
+	// UI-string translator, following the selected language (falls back to English)
+	const t = translator(selectedCode)
+
 	// shrink the display font before falling back to the marquee
 	const displayRef = useFitText(displayText)
 
@@ -173,12 +177,12 @@ function App() {
 				<div className="toolbar">
 					<button
 						className={(game.gameOn ? 'game-toggle on' : 'game-toggle') + (game.preparing ? ' busy' : '')}
-						aria-label={game.gameOn ? 'End game mode' : 'Start game'}
+						aria-label={game.gameOn ? t('game.end') : t('game.start')}
 						aria-pressed={game.gameOn}
 						title={
 							game.gameOn
-								? 'End game mode'
-								: (game.canPlay ? 'Start game' : 'Select at least one language to play')
+								? t('game.end')
+								: (game.canPlay ? t('game.start') : t('game.selectToPlay'))
 						}
 						disabled={(!game.gameOn && !game.canPlay) || game.preparing}
 						onClick={() => (game.gameOn ? game.exitGame() : game.startRound())}
@@ -187,16 +191,16 @@ function App() {
 					</button>
 					<button
 						className={audio.muted ? 'mute-toggle on' : 'mute-toggle'}
-						aria-label={audio.muted ? 'Unmute' : 'Mute'}
+						aria-label={audio.muted ? t('mute.unmute') : t('mute.mute')}
 						aria-pressed={audio.muted}
-						title={audio.muted ? 'Unmute sounds' : 'Mute all sounds'}
+						title={audio.muted ? t('mute.unmuteTitle') : t('mute.muteTitle')}
 						onClick={audio.toggleMute}
 					>
 						{audio.muted ? '🔇' : '🔊'}
 					</button>
 					<select
 						className="language-select"
-						title="Language of the numbers"
+						title={t('lang.title')}
 						value={lang ? lang.code : ''}
 						disabled={game.target !== null}
 						onChange={(e) => handleLanguageChange(e.target.value)}
@@ -211,6 +215,7 @@ function App() {
 						caching={caching}
 						cachedCount={cachedCount}
 						locked={game.gameOn}
+						t={t}
 						onChange={updateSettings}
 						onClearCache={clearSoundCache}
 					/>
@@ -222,7 +227,7 @@ function App() {
 				</div>
 				{game.gameOn && (
 					<GameScore
-						playedTitle="Numbers played"
+						t={t}
 						played={game.solved.length}
 						total={game.board.length}
 						mistakes={game.mistakes}
@@ -232,6 +237,7 @@ function App() {
 				)}
 				{game.gameOn && (
 					<GameActions
+						t={t}
 						roundActive={game.target !== null}
 						muted={audio.muted}
 						preparing={game.preparing}
