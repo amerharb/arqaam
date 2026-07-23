@@ -421,6 +421,23 @@ button:active {
 	user-select: none;
 }
 
+/* the interface-language row: 👁️ label + dropdown filling the rest */
+.settings-uilang {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.settings-uilang-icon {
+	font-size: 20px;
+	line-height: 1;
+	flex: none;
+}
+
+.settings-uilang .language-select {
+	flex: 1;
+}
+
 .settings-check input {
 	margin: 0;
 	cursor: pointer;

@@ -34,5 +34,16 @@
 	"group.languages": "Sprachen",
 	"game.selectToPlay": "Wähle mindestens eine Sprache zum Spielen",
 	"lang.title": "Sprache der Zahlen",
-	"score.played": "Gespielte Zahlen"
+	"score.played": "Gespielte Zahlen",
+	"uiLanguage": "Oberflächensprache",
+	"language.ar": "Arabisch",
+	"language.en": "Englisch",
+	"language.de": "Deutsch",
+	"language.sv": "Schwedisch",
+	"language.fr": "Französisch",
+	"language.tr": "Türkisch",
+	"language.fa": "Persisch",
+	"language.ru": "Russisch",
+	"language.fi": "Finnisch",
+	"language.es": "Spanisch"
 }

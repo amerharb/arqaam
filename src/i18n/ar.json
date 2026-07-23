@@ -34,5 +34,16 @@
 	"group.languages": "اللغات",
 	"game.selectToPlay": "اختر لغة واحدة على الأقل للعب",
 	"lang.title": "لغة الأرقام",
-	"score.played": "الأرقام الملعوبة"
+	"score.played": "الأرقام الملعوبة",
+	"uiLanguage": "لغة الواجهة",
+	"language.ar": "العربية",
+	"language.en": "الإنجليزية",
+	"language.de": "الألمانية",
+	"language.sv": "السويدية",
+	"language.fr": "الفرنسية",
+	"language.tr": "التركية",
+	"language.fa": "الفارسية",
+	"language.ru": "الروسية",
+	"language.fi": "الفنلندية",
+	"language.es": "الإسبانية"
 }

@@ -34,5 +34,16 @@
 	"group.languages": "Språk",
 	"game.selectToPlay": "Välj minst ett språk för att spela",
 	"lang.title": "Språk för siffrorna",
-	"score.played": "Spelade siffror"
+	"score.played": "Spelade siffror",
+	"uiLanguage": "Gränssnittsspråk",
+	"language.ar": "Arabiska",
+	"language.en": "Engelska",
+	"language.de": "Tyska",
+	"language.sv": "Svenska",
+	"language.fr": "Franska",
+	"language.tr": "Turkiska",
+	"language.fa": "Persiska",
+	"language.ru": "Ryska",
+	"language.fi": "Finska",
+	"language.es": "Spanska"
 }

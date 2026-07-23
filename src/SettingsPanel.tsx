@@ -22,11 +22,15 @@ type Props = {
 	locked: boolean,
 	// UI-string translator (falls back to English)
 	t: Translate,
+	// the current interface language and the options for its dropdown
+	uiLanguage: string,
+	uiLanguages: { code: string, display: string }[],
+	onSetUiLanguage: (code: string) => void,
 	onChange: (settings: Settings) => void,
 	onClearCache: () => void,
 }
 
-export default function SettingsPanel({ settings, languages, caching, cachedCount, locked, t, onChange, onClearCache }: Readonly<Props>) {
+export default function SettingsPanel({ settings, languages, caching, cachedCount, locked, t, uiLanguage, uiLanguages, onSetUiLanguage, onChange, onClearCache }: Readonly<Props>) {
 	const [open, setOpen] = useState(false)
 	const containerRef = useRef<HTMLDivElement | null>(null)
 
@@ -85,6 +89,23 @@ export default function SettingsPanel({ settings, languages, caching, cachedCoun
 								</button>
 							))}
 						</div>
+					</div>
+
+					<div className="settings-row">
+						<label className="settings-uilang">
+							<span className="settings-uilang-icon" aria-hidden="true">👁️</span>
+							<select
+								className="language-select"
+								aria-label={t('uiLanguage')}
+								title={t('uiLanguage')}
+								value={uiLanguage}
+								onChange={(e) => onSetUiLanguage(e.target.value)}
+							>
+								{uiLanguages.map(l => (
+									<option key={`ui-${l.code}`} value={l.code}>{l.display}</option>
+								))}
+							</select>
+						</label>
 					</div>
 
 					<div className="settings-row">

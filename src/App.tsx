@@ -9,7 +9,7 @@ import { ensureCached, idbCount, idbClear } from './audioCache'
 import { useAudio } from './useAudio'
 import { useGame } from './useGame'
 import { useFitText } from './useFitText'
-import { translator } from './i18n'
+import { translator, languageName, UI_LANGUAGES } from './i18n'
 import { Lang } from './lang/Lang'
 import { ar } from './lang/ar'
 import { de } from './lang/de'
@@ -163,8 +163,16 @@ function App() {
 		? lang.numbers[Number(game.target)]
 		: spelledNumber
 
-	// UI-string translator, following the selected language (falls back to English)
-	const t = translator(selectedCode)
+	// UI-string translator, following the interface language chosen in settings
+	// (independent of the content/number language; falls back to English)
+	const t = translator(settings.uiLanguage)
+	const setUiLanguage = (code: string) => updateSettings({ ...settings, uiLanguage: code })
+
+	// content languages as { code, display } with names in the UI language,
+	// sorted alphabetically by that display name (using the UI language's collation)
+	const localizedContent = (list: { code: string, display: string }[]) => list
+		.map(l => ({ code: l.code, display: languageName(t, l.code, l.display) }))
+		.sort((a, b) => a.display.localeCompare(b.display, settings.uiLanguage))
 
 	// shrink the display font before falling back to the marquee
 	const displayRef = useFitText(displayText)
@@ -205,17 +213,20 @@ function App() {
 						disabled={game.target !== null}
 						onChange={(e) => handleLanguageChange(e.target.value)}
 					>
-						{LANGUAGES.map(l => (
+						{localizedContent(LANGUAGES).map(l => (
 							<option key={`lang-${l.code}`} value={l.code}>{l.display}</option>
 						))}
 					</select>
 					<SettingsPanel
 						settings={settings}
-						languages={ALL_LANGUAGES}
+						languages={localizedContent(ALL_LANGUAGES)}
 						caching={caching}
 						cachedCount={cachedCount}
 						locked={game.gameOn}
 						t={t}
+						uiLanguage={settings.uiLanguage}
+						uiLanguages={UI_LANGUAGES}
+						onSetUiLanguage={setUiLanguage}
 						onChange={updateSettings}
 						onClearCache={clearSoundCache}
 					/>
