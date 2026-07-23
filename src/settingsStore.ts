@@ -29,7 +29,7 @@ export const DEFAULT_SETTINGS: Settings = {
 const STORAGE_KEY = 'arqaam:settings'
 
 // all content languages a browser locale can match
-const SPOKEN_LANGUAGES = ['ar', 'en', 'de', 'sv', 'fr', 'tr', 'fa', 'ru', 'fi', 'es']
+const SPOKEN_LANGUAGES = ['ar', 'en', 'de', 'sv', 'fr', 'tr', 'fa', 'ru', 'fi', 'es', 'he']
 // the interface languages we actually have translations for (a subset)
 const UI_LANGUAGE_CODES = ['en', 'ar', 'de', 'sv']
 

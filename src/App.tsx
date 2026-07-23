@@ -21,13 +21,14 @@ import { ru } from './lang/ru'
 import { sv } from './lang/sv'
 import { tr } from './lang/tr'
 import { es } from './lang/es'
+import { he } from './lang/he'
 
 // the numbers as game items: the code doubles as the sound file name
 const NUMBERS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => ({ code: String(n), value: n }))
 
 function App() {
 	// everything the build supports (after the beta feature flag)
-	const ALL_LANGUAGES: Lang[] = [ar, en, de, sv, fr, tr, fa, ru, fi, es].filter(isVisible)
+	const ALL_LANGUAGES: Lang[] = [ar, en, de, sv, fr, tr, fa, ru, fi, es, he].filter(isVisible)
 	// code of the selected language (the spoken and spelled number words); defaults
 	// to the browser's preferred language on first load
 	const [selectedCode, setSelectedCode] = useState(() => preferredLanguage())

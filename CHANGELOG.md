@@ -19,6 +19,8 @@
   sorted alphabetically by that displayed name (using the UI language's
   collation). The interface-language dropdown itself keeps native names
   (English, عربي, Deutsch, Svenska) so it is always self-findable
+- Add Hebrew (עברית) as a content language, with the number words 0–10 and
+  Microsoft Edge neural recordings (he-IL-Hila)
 ### Changed
 - In game mode with the round stopped (finished or ✋), the selected language
   can be changed again — the next 🔄 round uses it. It stays locked while a
