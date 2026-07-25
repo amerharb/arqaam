@@ -15,5 +15,7 @@ export const fi: Lang = {
 		'kahdeksan',
 		'yhdeksän',
 		'kymmenen',
+		'yksitoista',
+		'kaksitoista',
 	],
 }

@@ -2,6 +2,41 @@
 
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## [0.16.0] 2026-07-20
+### Added
+- Localize the interface: all UI text (button tooltips, the "select a language
+  to play" hint, settings labels, game score/actions) now lives in
+  `src/i18n/*.json`, falling back to English for any missing string
+- Add an interface-language dropdown (👁️) to the settings panel with the four
+  localized languages (English, Arabic, German, Swedish). It is now a separate,
+  persisted setting — independent of the content/number-language dropdown — so
+  the UI and the spoken language can differ. On first run it follows the browser
+  (primary language, then any of the browser's languages, else the
+  content-language pick if it is a UI language, else English)
+- Show the content-language names (top dropdown and settings checklist) in the
+  current interface language — e.g. "Persian" in an English UI, "Persisch" in a
+  German UI — falling back to the native name for any untranslated pair, and
+  sorted alphabetically by that displayed name (using the UI language's
+  collation). The interface-language dropdown itself keeps native names
+  (English, عربي, Deutsch, Svenska) so it is always self-findable
+- Add Hebrew (עברית) as a content language, with the number words and Microsoft
+  Edge neural recordings (he-IL-Hila)
+- Extend the range from 0–10 to 0–12: add eleven and twelve in every language,
+  with spoken names and Microsoft Edge neural recordings
+### Changed
+- Re-record the Arabic voice with Egyptian Salma (ar-EG-Salma) instead of Syrian
+  Amany, for a clearer, more standard reading across the whole set (0–12 and the
+  spoken language name)
+- In game mode with the round stopped (finished or ✋), the selected language
+  can be changed again — the next 🔄 round uses it. It stays locked while a
+  round is running, and showing or hiding languages/items in settings stays
+  locked for the whole game mode
+- Internal refactor (no behaviour change): App.tsx is split into focused
+  modules shared verbatim with the sister projects — `useAudio` (playback,
+  mute, feedback sounds), `useGame` (the round state machine), `GameHud` (the
+  score and action segments) and `useFitText` (the display shrink-to-fit) —
+  cutting App.tsx from ~545 to ~290 lines
+
 ## [0.15.0] 2026-07-18
 ### Fixed
 - Pressed and selected controls are now clearly visible in dark mode: a new

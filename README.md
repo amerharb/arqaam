@@ -1,4 +1,4 @@
-[![Version](https://img.shields.io/badge/version-0.15.0-blue.svg)](https://github.com/amerharb/arqaam/tree/version/0.15.0)
+[![Version](https://img.shields.io/badge/version-0.16.0-blue.svg)](https://github.com/amerharb/arqaam/tree/version/0.16.0)
 # Arqaam
 
 Small react project to pronounce numbers from zero to ten in several languages.
@@ -44,8 +44,9 @@ again (▶ while it plays) to stop.
   buttons. The prompted name is also written in the display segment (even
   while muted), and the 👂 button plays it again. When every number has been played the round is over — the clock
   freezes and the score stays — but game mode stays on: ✋ stops a round
-  early, 🔄 starts a fresh one, and pressing 🕹️ again leaves game mode. Theme and flight mode stay changeable mid-game; the language is
-  locked. Needs at least one language visible. Prompt sounds are pre-loaded so
+  early, 🔄 starts a fresh one, and pressing 🕹️ again leaves game mode. Theme and flight mode stay changeable mid-game; the language list is locked,
+  and the selected language can be changed only between rounds (after ✋ or
+  when a round finishes). Needs at least one language visible. Prompt sounds are pre-loaded so
   gameplay never waits on the network.
 - First visit: the starting language and which languages are shown come from your
   browser's language settings.
