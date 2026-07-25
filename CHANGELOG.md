@@ -24,6 +24,9 @@
 - Extend the range from 0–10 to 0–12: add eleven and twelve in every language,
   with spoken names and Microsoft Edge neural recordings
 ### Changed
+- Re-record the Arabic voice with Egyptian Salma (ar-EG-Salma) instead of Syrian
+  Amany, for a clearer, more standard reading across the whole set (0–12 and the
+  spoken language name)
 - In game mode with the round stopped (finished or ✋), the selected language
   can be changed again — the next 🔄 round uses it. It stays locked while a
   round is running, and showing or hiding languages/items in settings stays
