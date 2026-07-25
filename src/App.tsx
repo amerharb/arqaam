@@ -24,7 +24,7 @@ import { es } from './lang/es'
 import { he } from './lang/he'
 
 // the numbers as game items: the code doubles as the sound file name
-const NUMBERS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => ({ code: String(n), value: n }))
+const NUMBERS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => ({ code: String(n), value: n }))
 
 function App() {
 	// everything the build supports (after the beta feature flag)

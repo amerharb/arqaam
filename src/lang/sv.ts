@@ -15,5 +15,7 @@ export const sv: Lang = {
 		'åtta',
 		'nio',
 		'tio',
+		'elva',
+		'tolv',
 	],
 }

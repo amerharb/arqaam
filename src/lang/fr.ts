@@ -15,5 +15,7 @@ export const fr: Lang = {
 		'huit',
 		'neuf',
 		'dix',
+		'onze',
+		'douze',
 	],
 }

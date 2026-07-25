@@ -15,5 +15,7 @@ export const tr: Lang = {
         'sekiz',
         'dokuz',
         'on',
+        'on bir',
+        'on iki',
     ],
 }
