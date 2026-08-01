@@ -8,7 +8,7 @@ export type Theme = 'system' | 'light' | 'dark'
 
 export type Settings = {
 	theme: Theme,
-	// the interface language (button tooltips, settings labels): one of the four
+	// the interface language (button tooltips, settings labels): one of the seven
 	// localized languages, independent of the content (number) language
 	uiLanguage: string,
 	// language codes the user chose to hide from the main screen; empty = show
@@ -31,7 +31,7 @@ const STORAGE_KEY = 'arqaam:settings'
 // all content languages a browser locale can match
 const SPOKEN_LANGUAGES = ['ar', 'en', 'de', 'sv', 'fr', 'tr', 'fa', 'ru', 'fi', 'es', 'he']
 // the interface languages we actually have translations for (a subset)
-const UI_LANGUAGE_CODES = ['en', 'ar', 'de', 'sv']
+const UI_LANGUAGE_CODES = ['en', 'ar', 'de', 'el', 'sv', 'th', 'tr']
 
 // map a BCP-47 tag (e.g. "en-US", "sv") to one of a set of codes, or null
 function tagToCode(tag: string, set: string[]): string | null {
