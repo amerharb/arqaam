@@ -17,8 +17,28 @@ type AudioControls = {
 	play: (url: string, code?: string) => void | Promise<void>,
 	schedulePrompt: (url: string, delayMs: number) => void,
 	cancelPrompt: () => void,
-	fx: (name: 'correct' | 'wrong' | 'giveup') => void,
+	fx: (name: 'correct' | 'wrong' | 'giveup' | 'complete' | 'stopped') => void,
 }
+
+/*
+ * What one finished round scored. Kept in a list while game mode is on (so a
+ * player can look back over the session) and thrown away on leaving it.
+ */
+export type RoundResult = {
+	// how many items were played — guessed or given up
+	solved: number,
+	// how many were on the board
+	total: number,
+	// how long the round took
+	elapsedMs: number,
+	// wrong taps
+	mistakes: number,
+	// targets revealed with 🤷‍♂️
+	giveUps: number,
+	// which flavour of round it was: the selected language, or the anthem type
+	mode: string,
+}
+// a round that ran to the end is simply one where solved === total
 
 type UseGameOptions<T> = {
 	// false keeps 🕹️ disabled (e.g. no language visible)
@@ -30,12 +50,14 @@ type UseGameOptions<T> = {
 	// pre-download the round's prompts so gameplay never waits on the network
 	preload: (urls: string[]) => Promise<void>,
 	audio: AudioControls,
+	// labels the round in its result — the selected language or anthem type
+	mode: string,
 	// called when a round starts (e.g. to clear the clicked-name display)
 	onRoundStart?: () => void,
 }
 
 export function useGame<T extends { code: string }>(
-	{ canPlay, buildBoard, promptUrl, preload, audio, onRoundStart }: UseGameOptions<T>,
+	{ canPlay, buildBoard, promptUrl, preload, audio, mode, onRoundStart }: UseGameOptions<T>,
 ) {
 	const [gameOn, setGameOn] = useState(false)
 	const [board, setBoard] = useState<T[]>([])                // this round's board
@@ -52,6 +74,20 @@ export function useGame<T extends { code: string }>(
 	const [feedback, setFeedback] = useState<{ emoji: string, id: number } | null>(null)
 	const feedbackId = useRef(0)
 	const [preparing, setPreparing] = useState(false) // downloading prompt sounds before start
+	// every round finished so far this game session, newest last
+	const [results, setResults] = useState<RoundResult[]>([])
+
+	// record a finished round (played out or stopped early with ⏹️)
+	const recordRound = (solvedCount: number, giveUpCount: number) => {
+		setResults(r => [...r, {
+			solved: solvedCount,
+			total: board.length,
+			elapsedMs: Date.now() - roundStart.current,
+			mistakes,
+			giveUps: giveUpCount,
+			mode,
+		}])
+	}
 
 	// tick every second while a round runs, so the live ⏱️ time updates
 	const [, setClockTick] = useState(0)
@@ -100,12 +136,16 @@ export function useGame<T extends { code: string }>(
 		setWrongGuesses([])
 		setFeedback(null)
 		setEndedAt(null)
+		// the session's results only live as long as game mode does
+		setResults([])
 	}
 
 	// ✋: stop the current round early — freeze the clock and stats, stay in game mode
 	const stopRound = () => {
 		if (target === null) return
 		audio.stopSound()
+		recordRound(solved.length, giveUps)
+		audio.fx('stopped')
 		setTarget(null)
 		setWrongGuesses([])
 		setEndedAt(Date.now())
@@ -118,7 +158,7 @@ export function useGame<T extends { code: string }>(
 	}
 
 	// mark the target played and move on (or finish the round)
-	const advance = (code: string) => {
+	const advance = (code: string, giveUpCount: number) => {
 		// cancel any not-yet-fired next-prompt timer (e.g. the player answered
 		// the last target before the previous prompt was scheduled to play)
 		audio.cancelPrompt()
@@ -129,8 +169,10 @@ export function useGame<T extends { code: string }>(
 		const remaining = board.filter(i => !nextSolved.includes(i.code))
 		if (remaining.length === 0) {
 			// all played — the round is over, but game mode stays on until
-			// 🕹️ is clicked again (or 🔄 starts a new round)
+			// 🕹️ is clicked again (or ▶️ starts a new round)
 			audio.stopSound()
+			recordRound(nextSolved.length, giveUpCount)
+			audio.fx('complete')
 			setTarget(null)
 			setEndedAt(Date.now())
 		} else {
@@ -146,7 +188,7 @@ export function useGame<T extends { code: string }>(
 		if (code === target) {
 			audio.fx('correct')
 			flashFeedback('👍')
-			advance(code)
+			advance(code, giveUps)
 		} else {
 			// temporarily disable this wrong item (with a 👎 marker) until the round is won
 			setWrongGuesses(w => (w.includes(code) ? w : [...w, code]))
@@ -159,19 +201,22 @@ export function useGame<T extends { code: string }>(
 	// give up on the current target: counts as played and as a give-up (not a mistake)
 	const giveUp = () => {
 		if (target === null) return
-		setGiveUps(g => g + 1)
+		const nextGiveUps = giveUps + 1
+		setGiveUps(nextGiveUps)
 		setGaveUpCodes(g => (g.includes(target) ? g : [...g, target]))
 		audio.fx('giveup')
 		flashFeedback('🤷‍♂️')
-		advance(target)
+		advance(target, nextGiveUps)
 	}
 
 	return {
 		canPlay,
 		gameOn, board, target, solved, wrongGuesses, mistakes, giveUps, gaveUpCodes,
-		endedAt, preparing, feedback,
+		endedAt, preparing, feedback, results,
 		// how long the round has been running (frozen once it ends)
 		elapsedMs: (endedAt ?? Date.now()) - roundStart.current,
 		startRound, exitGame, stopRound, replay, guess, giveUp,
+		// one control for ⏹️/▶️: stop the running round, or start a fresh one
+		toggleRound: () => (target !== null ? stopRound() : startRound()),
 	}
 }

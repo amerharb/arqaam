@@ -2,6 +2,19 @@
 
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## [0.17.0] (unreleased)
+### Added
+- Two new round sounds: a rising fanfare when a round is played to the end, and
+  a softer two-tone when the player ends it early with ⏹️
+- Keep a result per finished round while game mode is on — `{ solved, total,
+  elapsedMs, mistakes, giveUps, mode }`, where `mode` records which
+  language/anthem type it was played in. A round that ran to the end is simply
+  one where `solved === total`. The list is cleared on leaving game mode
+### Changed
+- Merge the ✋ stop and 🔄 restart buttons into one media-style control: it shows
+  ⏹️ while a round is running and ▶️ once it has ended, so the same spot always
+  stops or starts
+
 ## [0.16.0] 2026-07-20
 ### Added
 - Localize the interface: all UI text (button tooltips, the "select a language

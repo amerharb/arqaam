@@ -1,4 +1,4 @@
-[![Version](https://img.shields.io/badge/version-0.16.0-blue.svg)](https://github.com/amerharb/arqaam/tree/version/0.16.0)
+[![Version](https://img.shields.io/badge/version-0.17.0-blue.svg)](https://github.com/amerharb/arqaam/tree/version/0.16.0)
 # Arqaam
 
 Small react project to pronounce numbers from zero to ten in several languages.

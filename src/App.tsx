@@ -155,6 +155,8 @@ function App() {
 			refreshCacheCount()
 		},
 		audio,
+		// a round is labelled by the language it was played in
+		mode: selectedCode,
 		onRoundStart: () => setSpelledNumber(''),
 	})
 
@@ -255,8 +257,7 @@ function App() {
 						preparing={game.preparing}
 						onReplay={game.replay}
 						onGiveUp={game.giveUp}
-						onStop={game.stopRound}
-						onRestart={game.startRound}
+						onToggleRound={game.toggleRound}
 					/>
 				)}
 			</header>
