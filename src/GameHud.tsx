@@ -1,6 +1,6 @@
 /*
  * The two game-only app-bar segments: the live score (frozen when the round
- * ends) and the round actions (👂 replay, 🤷‍♂️ give up, ✋ stop, 🔄 restart).
+ * ends) and the round actions (👂 replay, 🤷‍♂️ give up, and one ⏹️/▶️ stop-or-start).
  *
  * UI strings come from a translate function `t` passed by the app, so these
  * segments stay presentational and localization lives in one place.
@@ -38,19 +38,19 @@ export function GameScore({ t, played, total, mistakes, giveUps, ms }: Readonly<
 
 type ActionsProps = {
 	t: Translate,
-	// no round is running (between rounds): 👂, 🤷‍♂️ and ✋ are disabled
+	// a round is running: 👂 and 🤷‍♂️ work, and the toggle shows ⏹️
 	roundActive: boolean,
 	// 👂 is also pointless while muted
 	muted: boolean,
-	// 🔄 is disabled while the next round's sounds are still downloading
+	// the toggle is disabled while the next round's sounds are still downloading
 	preparing: boolean,
 	onReplay: () => void,
 	onGiveUp: () => void,
-	onStop: () => void,
-	onRestart: () => void,
+	// one button for both: stops the running round, or starts a fresh one
+	onToggleRound: () => void,
 }
 
-export function GameActions({ t, roundActive, muted, preparing, onReplay, onGiveUp, onStop, onRestart }: Readonly<ActionsProps>) {
+export function GameActions({ t, roundActive, muted, preparing, onReplay, onGiveUp, onToggleRound }: Readonly<ActionsProps>) {
 	return (
 		<div className="game-actions">
 			<button
@@ -69,21 +69,14 @@ export function GameActions({ t, roundActive, muted, preparing, onReplay, onGive
 			>
 				🤷‍♂️
 			</button>
+			{/* one control: ⏹️ stops the round that is running, ▶️ starts the next */}
 			<button
-				aria-label={t('action.stop')}
-				title={t('action.stopTitle')}
-				disabled={!roundActive}
-				onClick={onStop}
-			>
-				✋
-			</button>
-			<button
-				aria-label={t('action.restart')}
-				title={t('action.restartTitle')}
+				aria-label={roundActive ? t('action.stop') : t('action.restart')}
+				title={roundActive ? t('action.stopTitle') : t('action.restartTitle')}
 				disabled={preparing}
-				onClick={onRestart}
+				onClick={onToggleRound}
 			>
-				🔄
+				{roundActive ? '⏹️' : '▶️'}
 			</button>
 		</div>
 	)

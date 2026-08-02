@@ -8,7 +8,11 @@ import { useCallback, useRef, useState } from 'react'
 import { getAudioBlob } from './audioCache'
 
 // short win/lose feedback sounds
-function playFx(name: 'correct' | 'wrong' | 'giveup') {
+// the short feedback sounds: per-guess (correct/wrong/giveup) and per-round
+// (complete when everything was played, stopped when the player ended it early)
+export type FxName = 'correct' | 'wrong' | 'giveup' | 'complete' | 'stopped'
+
+function playFx(name: FxName) {
 	try {
 		new Audio(`/sound/fx/${name}.aac`).play().catch(() => {})
 	} catch {
@@ -100,7 +104,7 @@ export function useAudio(onPlayed?: () => void) {
 	}, [play])
 
 	// feedback sounds respect the mute toggle
-	const fx = useCallback((name: 'correct' | 'wrong' | 'giveup') => {
+	const fx = useCallback((name: FxName) => {
 		if (!mutedRef.current) playFx(name)
 	}, [])
 
