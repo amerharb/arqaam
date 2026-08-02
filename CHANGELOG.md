@@ -2,7 +2,10 @@
 
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
-## [0.17.0] (unreleased)
+## [0.17.0] 2026-08-03
+### Fixed
+- Correct the README: the range is 0–12, not 0–10, and the version badge
+  pointed at the old 0.16.0 branch
 ### Added
 - Add Simplified Chinese (简体中文) as an interface language, bringing every
   sister project to the same eight: English, Arabic, German, Greek, Swedish,

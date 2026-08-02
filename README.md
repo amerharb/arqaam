@@ -1,7 +1,8 @@
-[![Version](https://img.shields.io/badge/version-0.17.0-blue.svg)](https://github.com/amerharb/arqaam/tree/version/0.16.0)
+[![Version](https://img.shields.io/badge/version-0.17.0-blue.svg)](https://github.com/amerharb/arqaam)
 # Arqaam
 
-Small react project to pronounce numbers from zero to ten in several languages.
+Small react project to pronounce numbers from zero to twelve in several
+languages.
 Sister project of [Flags](https://github.com/amerharb/flags),
 [Colors](https://github.com/amerharb/colors) and
 [Week](https://github.com/amerharb/week).
@@ -19,8 +20,12 @@ Sister project of [Flags](https://github.com/amerharb/flags),
 - Spanish
 - We are looking for more languages, see How to contribute
 
+The interface is separately available in eight languages: English, Arabic,
+German, Greek, Swedish, Thai, Turkish and Simplified Chinese.
+
+
 ## How it works
-Pick a language from the dropdown in the top right, then click a number (0–10)
+Pick a language from the dropdown in the top right, then click a number (0–12)
 to hear it pronounced and see it spelled out in that language. Click the number
 again (▶ while it plays) to stop.
 
