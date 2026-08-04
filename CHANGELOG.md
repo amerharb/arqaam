@@ -2,6 +2,19 @@
 
 <!-- https://keepachangelog.com/en/1.0.0/ -->
 
+## [0.18.0] (unreleased)
+### Changed
+- **This project has moved into the sawt monorepo**
+  (<https://github.com/amerharb/sawt>), at `apps/numbers`.
+  Renamed to `numbers` in the move.
+  This repository is archived and read-only: it holds the history up to the
+  move, and all later work happens in `sawt`.
+
+### Fixed
+- README: the game section still described ✋ stop and 🔄 restart as separate
+  buttons
+
+
 ## [0.17.0] 2026-08-03
 ### Fixed
 - Correct the README: the range is 0–12, not 0–10, and the version badge

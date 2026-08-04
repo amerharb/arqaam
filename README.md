@@ -1,4 +1,16 @@
-[![Version](https://img.shields.io/badge/version-0.17.0-blue.svg)](https://github.com/amerharb/arqaam)
+> [!IMPORTANT]
+> **This repository has moved.**
+>
+> Arqaam now lives in the [**sawt**](https://github.com/amerharb/sawt)
+> monorepo, at [`apps/numbers`](https://github.com/amerharb/sawt/tree/main/apps/numbers),
+> alongside its four sister apps and a shared landing page.
+>
+> It is now called **Numbers** — Arqaam was renamed in the move.
+>
+> This repository is archived and read-only. It keeps the history up to the
+> move; everything after it happens in `sawt`.
+
+[![Version](https://img.shields.io/badge/version-0.18.0-blue.svg)](https://github.com/amerharb/arqaam)
 # Arqaam
 
 Small react project to pronounce numbers from zero to twelve in several
@@ -48,9 +60,9 @@ again (▶ while it plays) to stop.
   mistakes, give-ups, time) shown live in the app bar next to the round
   buttons. The prompted name is also written in the display segment (even
   while muted), and the 👂 button plays it again. When every number has been played the round is over — the clock
-  freezes and the score stays — but game mode stays on: ✋ stops a round
-  early, 🔄 starts a fresh one, and pressing 🕹️ again leaves game mode. Theme and flight mode stay changeable mid-game; the language list is locked,
-  and the selected language can be changed only between rounds (after ✋ or
+  freezes and the score stays — but game mode stays on: ⏹️ stops a round that is
+  running and ▶️ starts the next, and pressing 🕹️ again leaves game mode. Theme and flight mode stay changeable mid-game; the language list is locked,
+  and the selected language can be changed only between rounds (after ⏹️ or
   when a round finishes). Needs at least one language visible. Prompt sounds are pre-loaded so
   gameplay never waits on the network.
 - First visit: the starting language and which languages are shown come from your
